@@ -32,3 +32,7 @@ declare module '*.tiff' {
   const content: string;
   export default content;
 }
+
+declare module "client/components/ui/button" {
+  export const Button: React.FC<{ children: React.ReactNode }>;
+}
