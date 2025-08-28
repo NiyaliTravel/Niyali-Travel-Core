@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'docs',
+    outDir: '../docs', // Output to a 'docs' folder at the repository root
   },
 });
