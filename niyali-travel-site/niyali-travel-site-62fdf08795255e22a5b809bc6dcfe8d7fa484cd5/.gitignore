@@ -3,17 +3,11 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-client/node_modules/
-server/node_modules/
-pnpm-lock.yaml
-package-lock.json
 
 # Build outputs
 dist/
 build/
 .next/
-client/dist/
-server/dist/
 
 # Environment files
 .env
@@ -21,8 +15,6 @@ server/dist/
 .env.development.local
 .env.test.local
 .env.production.local
-.env.example
-*.bak
 
 # OS generated files
 .DS_Store
@@ -36,7 +28,6 @@ Thumbs.db
 # IDE files
 .vscode/
 .idea/
-.history/
 *.swp
 *.swo
 *~

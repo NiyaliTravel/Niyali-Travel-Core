@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+// import { registerRoutes } from "@/routes/routes";
+// import { setupVite, serveStatic, log } from "@/utils/vite";
 
 const app = express();
 app.use(express.json());
@@ -56,6 +56,22 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
+
+
+  // Fallback for client-side routing
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile('index.html', { root: 'client' });
+    }
+  });
+
+  // Fallback for client-side routing
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile('index.html', { root: 'client' });
+    }
+  });
+
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
   // Other ports are firewalled. Default to 5000 if not specified.

@@ -26,6 +26,9 @@ export async function analyzeSentiment(text: string): Promise<{
       response_format: { type: "json_object" },
     });
 
+    if (response.choices[0].message.content === null) {
+      throw new Error("OpenAI response content is null.");
+    }
     const result = JSON.parse(response.choices[0].message.content);
 
     return {
@@ -63,6 +66,9 @@ export async function generateChatResponse(message: string, context?: string): P
       max_tokens: 500,
     });
 
+    if (response.choices[0].message.content === null) {
+      throw new Error("OpenAI response content is null.");
+    }
     return response.choices[0].message.content;
   } catch (error) {
     throw new Error("Failed to generate chat response: " + error.message);
@@ -95,9 +101,12 @@ export async function generateTravelRecommendations(userPreferences: {
       response_format: { type: "json_object" },
     });
 
+    if (response.choices[0].message.content === null) {
+      throw new Error("OpenAI response content is null.");
+    }
     const result = JSON.parse(response.choices[0].message.content);
     return result;
   } catch (error) {
-    throw new Error("Failed to generate travel recommendations: " + error.message);
+    throw new Error("Failed to generate travel recommendations: " + (error as Error).message);
   }
 }

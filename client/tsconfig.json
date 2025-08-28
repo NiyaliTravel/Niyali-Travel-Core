@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@shared/*": ["../shared/*"]
+    },
+    "outDir": "../dist/client",
+    "jsx": "react-jsx",
+    "moduleResolution": "node"
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}
