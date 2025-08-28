@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card } from "../components/ui/card";
 import { MessageSquare, X, Send } from "lucide-react";
-import { useWebSocket } from "@/utils/websocket";
+import { useWebSocket } from "../Utills/websocket";
 
 interface ChatMessage {
   id: string;

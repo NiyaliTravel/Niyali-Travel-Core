@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./src/*"],
+      "@assets/*": ["./assets/*"],
       "@shared/*": ["../shared/*"]
     },
     "outDir": "../dist/client",

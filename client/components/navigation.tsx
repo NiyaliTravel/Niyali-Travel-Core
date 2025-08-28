@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "../components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../components/ui/dropdown-menu";
 import { Menu, X, ChevronDown } from "lucide-react";
 import SocialLinks from "./social-links";
-import NiyaliLogo from "@assets/Niyali Main Logo_1755576205013.jpg";
+import NiyaliLogo from "../assets/Niyali Main Logo_1755576205013.jpg";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Navigation() {
