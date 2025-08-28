@@ -154,7 +154,3 @@ Desktop.ini
 
 # Editor config files
 .editorconfig
-
-# Niyali Travel Specific
-supabase/
-supabase/supabase.env
