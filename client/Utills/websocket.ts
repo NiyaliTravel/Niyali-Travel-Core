@@ -140,6 +140,7 @@ export class WebSocketService {
   private messageHandlers: Map<string, (data: any) => void> = new Map();
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
+  private reconnectTimeoutRef: React.MutableRefObject<NodeJS.Timeout | null> = useRef<NodeJS.Timeout | null>(null);
 
   private constructor() {}
 
@@ -187,7 +188,7 @@ export class WebSocketService {
           console.log('WebSocket Service disconnected');
           
           if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
-            setTimeout(() => {
+            this.reconnectTimeoutRef.current = setTimeout(() => {
               this.reconnectAttempts++;
               this.connect();
             }, Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000));
@@ -206,6 +207,9 @@ export class WebSocketService {
   }
 
   public disconnect(): void {
+    if (this.reconnectTimeoutRef.current) {
+      clearTimeout(this.reconnectTimeoutRef.current);
+    }
     if (this.ws) {
       this.ws.close(1000);
       this.ws = null;
