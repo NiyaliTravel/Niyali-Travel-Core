@@ -1,0 +1,1 @@
+export const MAX_FIX_ATTEMPTS = 5;
