@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/utils/queryClient";
+import { apiRequest } from "@/Utills/queryClient";
 import { Edit, Save, Plus, Trash2, Settings, Navigation, FileText, Upload, Image } from "lucide-react";
 import { ObjectUploader } from "@/components/ObjectUploader";
 

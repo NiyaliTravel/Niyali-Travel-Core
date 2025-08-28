@@ -6,7 +6,9 @@ import FerryScheduleWidget from "../components/ferry-schedule-widget";
 import DomesticAirlinesWidget from "../components/domestic-airlines-widget";
 import InteractiveStats from "../components/interactive-stats";
 import AgentPortalCTA from "../components/agent-portal-cta";
-import AIChatbotWidget from "../components/ai-chatbot-widget";
+import dynamic from "next/dynamic";
+
+const AIChatbotWidget = dynamic(() => import("../components/ai-chatbot-widget"), { ssr: false }) as React.FC;
 import Footer from "../components/footer";
 
 export default function Home() {

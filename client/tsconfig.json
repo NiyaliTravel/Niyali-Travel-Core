@@ -12,9 +12,6 @@
       "@shared/*": [
         "../shared/*"
       ],
-      "*": [
-        "./*"
-      ]
     },
     "outDir": "../dist/client",
     "jsx": "preserve",

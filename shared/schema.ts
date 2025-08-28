@@ -1,6 +1,12 @@
 // This file will contain shared schema definitions.
 export interface DomesticAirline {
   id: string;
+  airlineCode: string;
+  frequency: string;
+  capacity?: number;
+  baggageAllowance?: string;
+  operatingDays?: string[];
+  notes?: string;
   name: string;
   code: string;
   fromLocation: string;

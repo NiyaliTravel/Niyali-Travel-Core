@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../utils/supabase.ts';
+import { supabase } from '../Utills/supabase.ts';
+import { Booking } from '../types'; // Assuming Booking interface is in client/types/index.ts
 
 export default function AgentDashboard() {
-  const [bookings, setBookings] = useState([]);
+    const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -18,7 +19,7 @@ export default function AgentDashboard() {
       <h2>My Bookings</h2>
       <ul>
         {bookings.map(b => (
-          <li key={b.id}>{b.guesthouseid} — {b.status}</li>
+          <li key={b.id}>{b.guestHouseId} — {b.status}</li>
         ))}
       </ul>
     </div>
