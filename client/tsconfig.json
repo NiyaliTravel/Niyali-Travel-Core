@@ -11,6 +11,9 @@
       ],
       "@shared/*": [
         "../shared/*"
+      ],
+      "*": [
+        "./*"
       ]
     },
     "outDir": "../dist/client",

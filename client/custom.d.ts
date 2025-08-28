@@ -33,6 +33,6 @@ declare module '*.tiff' {
   export default content;
 }
 
-declare module "client/components/ui/button" {
+declare module "components/ui/button" {
   export const Button: React.FC<{ children: React.ReactNode }>;
 }

@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/Niyali-Travel-Core/', // Set base path for GitHub Pages
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './'),
       '@assets': path.resolve(__dirname, './assets'),
     },
   },
