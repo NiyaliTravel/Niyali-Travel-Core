@@ -1,35 +1,33 @@
-name: Deploy to Hostinger VPS
+name: Deploy to GitHub Pages
+
 on:
   push:
-    branches: [main]
+    branches:
+      - master
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
-
-      - name: Lint
-        run: npm run lint
+        working-directory: ./client
 
       - name: Build
         run: npm run build
+        working-directory: ./client
 
-      - name: Run tests
-        run: npm test
-
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.6
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          host: ${{ secrets.HOSTINGER_HOST }}
-          username: ${{ secrets.HOSTINGER_USER }}
-          key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          script: |
-            cd /var/www/niyali-travel-core
-            git pull origin main
-            docker compose down
-            docker compose up -d --build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./client/dist
