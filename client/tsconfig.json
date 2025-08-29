@@ -1,34 +1,12 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@assets/*": [
-        "./assets/*"
-      ],
-      "@shared/*": [
-        "../shared/*"
-      ]
-    },
-    "outDir": "../dist/client",
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "target": "ESNext",
-    "module": "ESNext",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true
+      "@/*": ["./*"]
+    }
   },
-  "include": [
-    "**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts"
-  ]
+  "include": ["**/*"],
+  "exclude": ["node_modules", "dist"]
 }

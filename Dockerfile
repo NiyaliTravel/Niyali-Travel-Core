@@ -1,16 +1,25 @@
 # Build stage
 FROM node:20-alpine as builder
 WORKDIR /usr/src/app
-COPY client/package*.json ./
-COPY client/tsconfig.json ./
-COPY shared ./shared
+
+# Copy all package.json files
+COPY package.json ./
+COPY client/package.json ./client/
+COPY server/package.json ./server/
+COPY shared/package.json ./shared/
+
+# Install all dependencies
 RUN npm install
-COPY client/ .
-RUN npm run build
+
+# Copy all source code
+COPY . .
+
+# Build the client
+RUN npm run build --workspace=client
 
 # Production stage
 FROM nginx:stable-alpine
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /usr/src/app/client/dist /usr/share/nginx/html
+COPY client/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
