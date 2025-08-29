@@ -6,14 +6,13 @@ import { db } from "@/models/db";
 import { sql } from "drizzle-orm";
 import { analyzeSentiment } from "@/services/openai";
 import {
-  insertUserSchema, insertAgentSchema, insertGuestHouseSchema,
-  insertBookingSchema, insertReviewSchema, insertChatMessageSchema, insertDomesticAirlineSchema,
-  insertContentSectionSchema, insertNavigationItemSchema,
-  insertRoomAvailabilitySchema, insertPackageSchema, insertPackageAvailabilitySchema,
-  type User, type Agent, type GuestHouse, type Booking, type Experience,
+  type User, type InsertUser, type Agent, type InsertAgent, type GuestHouse, type InsertGuestHouse,
+  type Booking, type InsertBooking, type Experience,
   type FerrySchedule, type Review, type ChatMessage, type DomesticAirline,
-  type ContentSection, type NavigationItem
-} from "@shared/schema";
+  type ContentSection, type NavigationItem,
+  type InsertRoomAvailability, type RoomAvailability, type InsertPackage, type Package,
+  type InsertPackageAvailability, type PackageAvailability
+} from "../../shared/schema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ObjectStorageService, ObjectNotFoundError } from "@/services/storage/objectStorage";
@@ -204,11 +203,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         WHERE id = ${req.params.id} AND is_active = true
       `);
       
-      if (result.rows.length === 0) {
+      if (result.length === 0) {
         return res.status(404).json({ message: 'Island not found' });
       }
       
-      res.json(result.rows);
+      res.json(result);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch island', error: (error as Error).message });
     }
@@ -222,7 +221,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         WHERE atoll IS NOT NULL AND atoll != ''
         ORDER BY atoll ASC
       `);
-      const atolls = result.rows.map((row: any) => row.atoll);
+      const atolls = result.map((row: any) => row.atoll);
       res.json(atolls);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch atolls', error: (error as Error).message });
@@ -265,7 +264,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/guest-houses/:id', async (req, res) => {
     try {
-      const guestHouse = await storage.getGuestHouse(req.params.id);
+      const guestHouse = await storage.getGuestHouse(parseInt(req.params.id));
       if (!guestHouse) {
         return res.status(404).json({ message: 'Guest house not found' });
       }
@@ -346,7 +345,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/domestic-airlines/:id', async (req, res) => {
     try {
-      const airline = await storage.getDomesticAirline(req.params.id);
+      const airline = await storage.getDomesticAirline(parseInt(req.params.id));
       if (!airline) {
         return res.status(404).json({ message: 'Airline not found' });
       }
@@ -368,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/bookings/user', authenticateToken, async (req, res) => {
     try {
-      const bookings = await storage.getBookingsByUser(req.user!.id);
+      const bookings = await storage.getBookingsByUser(parseInt(req.user!.id));
       res.json(bookings);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch bookings', error: (error as Error).message });
@@ -403,7 +402,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create agent profile
       const agent = await storage.createAgent({
-        userId: user.id,
+        userId: (user as User).id,
         companyName,
         bio,
         whatsappNumber,
@@ -420,7 +419,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email, password } = req.body;
       
-      const user = await storage.getUserByEmail(email);
+      const user: User | undefined = await storage.getUserByEmail(email);
       if (!user || user.role !== 'agent') {
         return res.status(401).json({ message: 'Invalid credentials or not an agent account' });
       }
@@ -431,7 +430,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Check if agent is verified
-      const agent = await storage.getAgentByUserId(user.id);
+      const agent: Agent | undefined = await storage.getAgentByUserId(user.id);
       if (!agent || agent.verificationStatus !== 'verified') {
         return res.status(401).json({ message: 'Agent account pending verification' });
       }
@@ -451,7 +450,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Agent routes
   app.post('/api/agents', authenticateToken, authorizeRoles(['admin', 'editor', 'agent']), async (req, res) => {
     try {
-      const agentData = insertAgentSchema.parse(req.body);
+      const agentData = req.body;
       const agent = await storage.createAgent({
         ...agentData,
         userId: req.user!.id
@@ -473,7 +472,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/agents/profile', authenticateToken, async (req, res) => {
     try {
-      const agent = await storage.getAgentByUserId(req.user!.id);
+      const agent = await storage.getAgentByUserId(parseInt(req.user!.id));
       if (!agent) {
         return res.status(404).json({ message: 'Agent profile not found' });
       }
@@ -486,7 +485,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reviews routes
   app.post('/api/reviews', authenticateToken, authorizeRoles(['admin', 'editor', 'viewer', 'agent']), async (req, res) => {
     try {
-      const reviewData = insertReviewSchema.parse(req.body);
+      const reviewData = req.body;
       
       // Analyze sentiment of the review
       const sentiment = await analyzeSentiment(reviewData.comment || '');
@@ -504,7 +503,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/reviews/guest-house/:id', async (req, res) => {
     try {
-      const reviews = await storage.getReviewsByGuestHouse(req.params.id);
+      const reviews = await storage.getReviewsByGuestHouse(parseInt(req.params.id));
       res.json(reviews);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch reviews', error: (error as Error).message });
@@ -513,7 +512,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/chat', async (req, res) => {
     try {
-      const messageData = insertChatMessageSchema.parse(req.body);
+      const messageData = req.body;
       const message = await storage.createChatMessage(messageData);
       res.status(201).json(message);
     } catch (error) {
@@ -566,7 +565,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/content', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const contentData = insertContentSectionSchema.parse(req.body);
+      const contentData = req.body;
       const section = await storage.createContentSection({
         ...contentData,
         lastEditedBy: req.user!.id
@@ -579,8 +578,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/content/:id', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const contentData = insertContentSectionSchema.partial().parse(req.body);
-      const section = await storage.updateContentSection(req.params.id, {
+      const contentData = req.body;
+      const section = await storage.updateContentSection(parseInt(req.params.id), {
         ...contentData,
         lastEditedBy: req.user!.id
       });
@@ -595,7 +594,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/navigation/:id', authenticateToken, authorizeRoles(['admin']), async (req, res) => {
     try {
-      const deleted = await storage.deleteNavigationItem(req.params.id);
+      const deleted = await storage.deleteNavigationItem(parseInt(req.params.id));
       if (!deleted) {
         return res.status(404).json({ message: 'Navigation item not found' });
       }
@@ -660,7 +659,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/room-availability', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const availabilityData = insertRoomAvailabilitySchema.parse(req.body);
+      const availabilityData = req.body;
       const availability = await storage.createRoomAvailability(availabilityData);
       res.status(201).json(availability);
     } catch (error) {
@@ -670,8 +669,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/room-availability/:id', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const availabilityData = insertRoomAvailabilitySchema.partial().parse(req.body);
-      const availability = await storage.updateRoomAvailability(req.params.id, availabilityData);
+      const availabilityData = req.body;
+      const availability = await storage.updateRoomAvailability(parseInt(req.params.id), availabilityData);
       res.json(availability);
     } catch (error) {
       res.status(400).json({ message: 'Failed to update availability', error: (error as Error).message });
@@ -682,7 +681,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/packages', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const packageData = insertPackageSchema.parse(req.body);
+      const packageData = req.body;
       const pkg = await storage.createPackage(packageData);
       res.status(201).json(pkg);
     } catch (error) {
@@ -692,8 +691,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/packages/:id', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const packageData = insertPackageAvailabilitySchema.partial().parse(req.body);
-      const pkg = await storage.updatePackage(req.params.id, packageData);
+      const packageData = req.body;
+      const pkg = await storage.updatePackage(parseInt(req.params.id), packageData);
       res.json(pkg);
     } catch (error) {
       res.status(400).json({ message: 'Failed to update package', error: (error as Error).message });
@@ -705,7 +704,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { packageId, date } = req.query;
       const availability = await storage.getPackageAvailability(
-        packageId as string,
+        parseInt(packageId as string),
         date ? new Date(date as string) : undefined
       );
       res.json(availability);
@@ -716,7 +715,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/package-availability', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
-      const availabilityData = insertPackageAvailabilitySchema.parse(req.body);
+      const availabilityData = req.body;
       const availability = await storage.createPackageAvailability(availabilityData);
       res.status(201).json(availability);
     } catch (error) {
@@ -736,7 +735,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/bookings', authenticateToken, async (req, res) => {
     try {
-      const bookings = await storage.getUserBookings(req.user!.id);
+      const bookings = await storage.getUserBookings(parseInt(req.user!.id));
       res.json(bookings);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch bookings', error: (error as Error).message });
@@ -746,7 +745,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/bookings/:id/status', authenticateToken, authorizeRoles(['admin', 'editor']), async (req, res) => {
     try {
       const { status } = req.body;
-      const booking = await storage.updateBookingStatus(req.params.id, status);
+      const booking = await storage.updateBookingStatus(parseInt(req.params.id), status);
       res.json(booking);
     } catch (error) {
       res.status(400).json({ message: 'Failed to update booking status', error: (error as Error).message });

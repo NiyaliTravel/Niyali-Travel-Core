@@ -27,9 +27,9 @@ export async function setupVite(app: Express, server: Server) {
   };
 
   const vite = await createViteServer({
-    ...viteConfig,
     base: "/", // Explicitly set base to root
     configFile: false,
+    resolve: viteConfig.resolve,
     customLogger: {
       ...viteLogger,
       error: (msg: any, options: any) => {

@@ -1,155 +1,120 @@
 import { Request, Response } from 'express';
-import { supabase } from '../utils/supabase';
-import { v4 as uuidv4 } from 'uuid';
+import { db } from '@/models/db';
+import { guestHouses } from '@shared/schema';
+import { bookings, roomAvailability } from '@shared/schema';
+import { eq, and, gte, lte } from 'drizzle-orm';
 
 export const createBooking = async (req: Request, res: Response) => {
-  const { guesthouseid, userid, checkin, checkout, status } = req.body;
-
   try {
-    const bookingId = uuidv4();
-    const { data, error } = await supabase.from('bookings').insert([{
-      id: bookingId,
-      guesthouseid,
-      userid,
-      checkin,
-      checkout,
+    const { userId, guestHouseId, packageId, checkIn, checkOut, numGuests, totalPrice, status } = req.body;
+    const [newBooking] = await db.insert(bookings).values({
+      userId,
+      guestHouseId,
+      packageId,
+      checkIn,
+      checkOut,
+      numGuests,
+      totalPrice,
       status: status || 'pending',
-      created_at: new Date().toISOString()
-    }]).select();
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-    res.status(201).json(data[0]);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    }).returning();
+    res.status(201).json(newBooking);
+  } catch (error) {
+    console.error('Error creating booking:', error);
+    res.status(500).json({ message: 'Failed to create booking', error: (error as Error).message });
   }
 };
 
 export const cancelBooking = async (req: Request, res: Response) => {
-  const { id } = req.body;
-
   try {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({ status: 'cancelled' })
-      .eq('id', id)
-      .select();
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
+    const { id } = req.params;
+    const [cancelledBooking] = await db.update(bookings).set({ status: 'cancelled' }).where(eq(bookings.id, parseInt(id))).returning();
+    if (!cancelledBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
     }
-    if (!data || data.length === 0) {
-      return res.status(404).json({ error: 'Booking not found' });
-    }
-    res.status(200).json(data[0]);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(200).json(cancelledBooking);
+  } catch (error) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({ message: 'Failed to cancel booking', error: (error as Error).message });
   }
 };
 
 export const confirmBooking = async (req: Request, res: Response) => {
-  const { id } = req.body;
-
   try {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({ status: 'confirmed' })
-      .eq('id', id)
-      .select();
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
+    const { id } = req.params;
+    const [confirmedBooking] = await db.update(bookings).set({ status: 'confirmed' }).where(eq(bookings.id, parseInt(id))).returning();
+    if (!confirmedBooking) {
+      return res.status(404).json({ message: 'Booking not found' });
     }
-    if (!data || data.length === 0) {
-      return res.status(404).json({ error: 'Booking not found' });
-    }
-    res.status(200).json(data[0]);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(200).json(confirmedBooking);
+  } catch (error) {
+    console.error('Error confirming booking:', error);
+    res.status(500).json({ message: 'Failed to confirm booking', error: (error as Error).message });
   }
 };
 
 export const checkAvailability = async (req: Request, res: Response) => {
-  const { guesthouseid, checkin, checkout } = req.query;
+  const { guestHouseId, checkIn, checkOut } = req.query;
 
-  if (!guesthouseid || !checkin || !checkout) {
-    return res.status(400).json({ error: 'Missing guesthouseid, checkin, or checkout dates.' });
+  if (!guestHouseId || !checkIn || !checkOut) {
+    return res.status(400).json({ error: 'Missing guestHouseId, checkIn, or checkOut dates.' });
   }
 
   try {
-    const checkinDate = new Date(checkin as string);
-    const checkoutDate = new Date(checkout as string);
-    const dates: string[] = [];
+    const availability = await db.select().from(roomAvailability).where(
+      and(
+        eq(roomAvailability.guestHouseId, parseInt(guestHouseId as string)),
+        gte(roomAvailability.date, new Date(checkIn as string)),
+        lte(roomAvailability.date, new Date(checkOut as string))
+      )
+    );
 
-    for (let d = new Date(checkinDate); d <= checkoutDate; d.setDate(d.getDate() + 1)) {
-      dates.push(new Date(d).toISOString().split('T')[0]);
-    }
-
-    const { data, error } = await supabase
-      .from('availability')
-      .select('date, isavailable')
-      .in('date', dates)
-      .eq('guesthouseid', guesthouseid as string);
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
-
-    const allAvailable = data?.every((d: any) => d.isavailable);
-    res.status(200).json({ isAvailable: allAvailable, details: data });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    const allAvailable = availability.every(day => day.availableRooms > 0);
+    res.status(200).json({ isAvailable: allAvailable, details: availability });
+  } catch (error) {
+    console.error('Error checking availability:', error);
+    res.status(500).json({ message: 'Failed to check availability', error: (error as Error).message });
   }
 };
 
 export const updateAvailability = async (req: Request, res: Response) => {
-  const { guesthouseid, updates } = req.body; // updates: [{ date: 'YYYY-MM-DD', isavailable: true/false }]
+  const { guestHouseId, updates } = req.body; // updates: [{ date: 'YYYY-MM-DD', availableRooms: 5 }]
 
-  if (!guesthouseid || !updates || !Array.isArray(updates) || updates.length === 0) {
-    return res.status(400).json({ error: 'Missing guesthouseid or availability updates.' });
+  if (!guestHouseId || !updates || !Array.isArray(updates) || updates.length === 0) {
+    return res.status(400).json({ error: 'Missing guestHouseId or availability updates.' });
   }
 
   try {
-    const availabilityData = updates.map((update: any) => ({
-      guesthouseid,
-      date: update.date,
-      isavailable: update.isavailable,
-    }));
-
-    const { error } = await supabase.from('availability').upsert(availabilityData, { onConflict: 'guesthouseid, date' });
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
+    await db.transaction(async (tx) => {
+      for (const update of updates) {
+        await tx.update(roomAvailability).set({ availableRooms: update.availableRooms }).where(
+          and(
+            eq(roomAvailability.guestHouseId, guestHouseId),
+            eq(roomAvailability.date, new Date(update.date))
+          )
+        );
+      }
+    });
     res.status(200).json({ message: 'Availability updated successfully!' });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    console.error('Error updating availability:', error);
+    res.status(500).json({ message: 'Failed to update availability', error: (error as Error).message });
   }
 };
-
 export const updateRates = async (req: Request, res: Response) => {
-  const { guesthouseid, newRate } = req.body;
+  const { guestHouseId, newRate } = req.body;
 
-  if (!guesthouseid || !newRate) {
-    return res.status(400).json({ error: 'Missing guesthouseid or newRate.' });
+  if (!guestHouseId || !newRate) {
+    return res.status(400).json({ error: 'Missing guestHouseId or newRate.' });
   }
 
   try {
-    const { data, error } = await supabase
-      .from('guesthouses')
-      .update({ price_per_night: parseFloat(newRate) })
-      .eq('id', guesthouseid)
-      .select();
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
+    const [updatedGuesthouse] = await db.update(guestHouses).set({ price: newRate }).where(eq(guestHouses.id, guestHouseId)).returning();
+    if (!updatedGuesthouse) {
+      return res.status(404).json({ message: 'Guesthouse not found' });
     }
-    if (!data || data.length === 0) {
-      return res.status(404).json({ error: 'Guesthouse not found' });
-    }
-    res.status(200).json(data[0]);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(200).json(updatedGuesthouse);
+  } catch (error) {
+    console.error('Error updating rates:', error);
+    res.status(500).json({ message: 'Failed to update rates', error: (error as Error).message });
   }
 };

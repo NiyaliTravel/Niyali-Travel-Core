@@ -43,7 +43,7 @@ export const deleteAtoll = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const result = await db.delete(atolls).where(eq(atolls.id, parseInt(id)));
-    if (result.rowCount === 0) {
+    if (result.length === 0) {
       return res.status(404).json({ message: 'Atoll not found' });
     }
     res.status(204).send();

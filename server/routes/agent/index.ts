@@ -1,5 +1,5 @@
 import express from 'express';
-import { requireRole } from '../../middleware/auth';
+import { allowRoles } from '../../middleware/auth';
 import {
   getGuesthouses,
   createBooking,
@@ -8,7 +8,7 @@ import {
 } from '../../controllers/agent';
 
 const router = express.Router();
-router.use(requireRole('travel_agent'));
+router.use(allowRoles('agent'));
 
 router.get('/guesthouses', getGuesthouses);
 router.post('/bookings', createBooking);

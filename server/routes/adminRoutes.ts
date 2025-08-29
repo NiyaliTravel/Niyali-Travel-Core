@@ -1,19 +1,14 @@
-// import express from 'express';
-// import { requireRole } from '../../middleware/auth';
-// import {
-//   getAtolls,
-//   createAtoll,
-//   updateAtoll,
-//   deleteAtoll,
-// } from '../../controllers/admin/atolls';
+import { Router } from 'express';
+import { getAtolls, createAtoll, updateAtoll, deleteAtoll } from '../controllers/admin/atolls';
+import { authenticateToken, authorizeRoles } from '../middleware/middleware';
 
-const router = express.Router();
+const router = Router();
 
-router.use(requireRole('admin'));
+router.use(authenticateToken, authorizeRoles(['admin']));
 
-router.get('/', getAtolls);
-router.post('/', createAtoll);
-router.put('/:id', updateAtoll);
-router.delete('/:id', deleteAtoll);
+router.get('/atolls', getAtolls);
+router.post('/atolls', createAtoll);
+router.put('/atolls/:id', updateAtoll);
+router.delete('/atolls/:id', deleteAtoll);
 
 export default router;

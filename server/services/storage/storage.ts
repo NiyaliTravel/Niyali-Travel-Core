@@ -1,94 +1,82 @@
-// import {
-//   users, agents, guestHouses, bookings, experiences, ferrySchedules, reviews, chatMessages, loyaltyProgram, domesticAirlines,
-//   contentSections, navigationItems,
-//   type User, type InsertUser, type Agent, type InsertAgent, type GuestHouse, type InsertGuestHouse,
-//   type Booking, type InsertBooking, type Experience, type InsertExperience, type FerrySchedule,
-//   type InsertFerrySchedule, type Review, type InsertReview, type ChatMessage, type InsertChatMessage,
-//   type LoyaltyProgram, type DomesticAirline, type InsertDomesticAirline, type ContentSection,
-//   type InsertContentSection, type NavigationItem, type InsertNavigationItem
-// } from "@shared/schema";
-// import { db } from "@/models/db";
-// import { eq, and, gte, lte, desc, sql, like, or } from "drizzle-orm";
-
-// import {
-//   roomAvailability,
-//   packages,
-//   packageAvailability,
-//   payments,
-//   type InsertRoomAvailability,
-//   type RoomAvailability,
-//   type InsertPackage,
-//   type Package,
-//   type InsertPackageAvailability,
-//   type PackageAvailability,
-//   type Payment,
-//   type InsertPayment
-// } from "@shared/schema";
+import {
+  users, agents, guestHouses, bookings, experiences, ferrySchedules, reviews, chatMessages, loyaltyProgram, domesticAirlines,
+  contentSections, navigationItems,
+  roomAvailability, packages, packageAvailability,
+  type User, type InsertUser, type Agent, type InsertAgent, type GuestHouse, type InsertGuestHouse,
+  type Booking, type InsertBooking, type Experience, type InsertExperience, type FerrySchedule,
+  type InsertFerrySchedule, type Review, type InsertReview, type ChatMessage, type InsertChatMessage,
+  type LoyaltyProgram, type DomesticAirline, type InsertDomesticAirline, type ContentSection,
+  type InsertContentSection, type NavigationItem, type InsertNavigationItem,
+  type InsertRoomAvailability, type RoomAvailability, type InsertPackage, type Package,
+  type InsertPackageAvailability, type PackageAvailability
+} from "@shared/schema";
+import { db } from "@/models/db";
+import { eq, and, gte, lte, desc, sql, like, or } from "drizzle-orm";
 
 export interface IStorage {
   // User operations
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
+  updateUser(id: number, user: Partial<InsertUser>): Promise<User | undefined>;
 
   // Agent operations
-  getAgent(id: string): Promise<Agent | undefined>;
-  getAgentByUserId(userId: string): Promise<Agent | undefined>;
+  getAgent(id: number): Promise<Agent | undefined>;
+  getAgentByUserId(userId: number): Promise<Agent | undefined>;
   createAgent(agent: InsertAgent): Promise<Agent>;
-  updateAgent(id: string, agent: Partial<InsertAgent>): Promise<Agent | undefined>;
+  updateAgent(id: number, agent: Partial<InsertAgent>): Promise<Agent | undefined>;
   getAgentsByTier(tier: string): Promise<Agent[]>;
   getAllAgents(): Promise<Agent[]>;
 
   // Guest House operations
-  getGuestHouse(id: string): Promise<GuestHouse | undefined>;
+  getGuestHouse(id: number): Promise<GuestHouse | undefined>;
   getAllGuestHouses(): Promise<GuestHouse[]>;
   getFeaturedGuestHouses(): Promise<GuestHouse[]>;
   getGuestHousesByAtoll(atoll: string): Promise<GuestHouse[]>;
   searchGuestHouses(query: string): Promise<GuestHouse[]>;
   createGuestHouse(guestHouse: InsertGuestHouse): Promise<GuestHouse>;
-  updateGuestHouse(id: string, guestHouse: Partial<InsertGuestHouse>): Promise<GuestHouse | undefined>;
-  deleteGuestHouse(id: string): Promise<boolean>;
+  updateGuestHouse(id: number, guestHouse: Partial<InsertGuestHouse>): Promise<GuestHouse | undefined>;
+  deleteGuestHouse(id: number): Promise<boolean>;
 
   // Booking operations
-  getBooking(id: string): Promise<Booking | undefined>;
-  getBookingsByUser(userId: string): Promise<Booking[]>;
-  getBookingsByAgent(agentId: string): Promise<Booking[]>;
-  getBookingsByGuestHouse(guestHouseId: string): Promise<Booking[]>;
+  getBooking(id: number): Promise<Booking | undefined>;
+  getBookingsByUser(userId: number): Promise<Booking[]>;
+  getBookingsByAgent(agentId: number): Promise<Booking[]>;
+  getBookingsByGuestHouse(guestHouseId: number): Promise<Booking[]>;
   createBooking(booking: InsertBooking): Promise<Booking>;
-  updateBooking(id: string, booking: Partial<InsertBooking>): Promise<Booking | undefined>;
-  getBookingAvailability(guestHouseId: string, checkIn: Date, checkOut: Date): Promise<boolean>;
+  updateBooking(id: number, booking: Partial<InsertBooking>): Promise<Booking | undefined>;
+  getBookingAvailability(guestHouseId: number, checkIn: Date, checkOut: Date): Promise<boolean>;
 
   // Experience operations
   getAllExperiences(): Promise<Experience[]>;
   getFeaturedExperiences(): Promise<Experience[]>;
   getExperiencesByCategory(category: string): Promise<Experience[]>;
-  getExperience(id: string): Promise<Experience | undefined>;
+  getExperience(id: number): Promise<Experience | undefined>;
   createExperience(experience: InsertExperience): Promise<Experience>;
-  updateExperience(id: string, experience: Partial<InsertExperience>): Promise<Experience | undefined>;
-  deleteExperience(id: string): Promise<boolean>;
+  updateExperience(id: number, experience: Partial<InsertExperience>): Promise<Experience | undefined>;
+  deleteExperience(id: number): Promise<boolean>;
 
   // Ferry Schedule operations
   getAllFerrySchedules(): Promise<FerrySchedule[]>;
   searchFerrySchedules(from: string, to: string, date?: string): Promise<FerrySchedule[]>;
-  getFerrySchedule(id: string): Promise<FerrySchedule | undefined>;
+  getFerrySchedule(id: number): Promise<FerrySchedule | undefined>;
   createFerrySchedule(schedule: InsertFerrySchedule): Promise<FerrySchedule>;
-  updateFerrySchedule(id: string, schedule: Partial<InsertFerrySchedule>): Promise<FerrySchedule | undefined>;
-  deleteFerrySchedule(id: string): Promise<boolean>;
+  updateFerrySchedule(id: number, schedule: Partial<InsertFerrySchedule>): Promise<FerrySchedule | undefined>;
+  deleteFerrySchedule(id: number): Promise<boolean>;
 
   // Domestic Airlines operations
   getAllDomesticAirlines(): Promise<DomesticAirline[]>;
   searchDomesticAirlines(from: string, to: string, date?: string): Promise<DomesticAirline[]>;
-  getDomesticAirline(id: string): Promise<DomesticAirline | undefined>;
+  getDomesticAirline(id: number): Promise<DomesticAirline | undefined>;
   createDomesticAirline(airline: InsertDomesticAirline): Promise<DomesticAirline>;
-  updateDomesticAirline(id: string, airline: Partial<InsertDomesticAirline>): Promise<DomesticAirline | undefined>;
-  deleteDomesticAirline(id: string): Promise<boolean>;
+  updateDomesticAirline(id: number, airline: Partial<InsertDomesticAirline>): Promise<DomesticAirline | undefined>;
+  deleteDomesticAirline(id: number): Promise<boolean>;
   getDomesticAirlinesByType(aircraftType: string): Promise<DomesticAirline[]>;
 
   // Review operations
-  getReviewsByGuestHouse(guestHouseId: string): Promise<Review[]>;
-  getReviewsByUser(userId: string): Promise<Review[]>;
+  getReviewsByGuestHouse(guestHouseId: number): Promise<Review[]>;
+  getReviewsByUser(userId: number): Promise<Review[]>;
   createReview(review: InsertReview): Promise<Review>;
 
   // Chat operations
@@ -96,50 +84,50 @@ export interface IStorage {
   createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
 
   // Loyalty Program operations
-  getLoyaltyProgram(userId: string): Promise<LoyaltyProgram | undefined>;
-  updateLoyaltyPoints(userId: string, points: number): Promise<LoyaltyProgram | undefined>;
+  getLoyaltyProgram(userId: number): Promise<LoyaltyProgram | undefined>;
+  updateLoyaltyPoints(userId: number, points: number): Promise<LoyaltyProgram | undefined>;
 
   // Content Management operations
   getContentSection(sectionKey: string): Promise<ContentSection | undefined>;
   getAllContentSections(): Promise<ContentSection[]>;
   createContentSection(content: InsertContentSection): Promise<ContentSection>;
-  updateContentSection(id: string, content: Partial<InsertContentSection>): Promise<ContentSection | undefined>;
+  updateContentSection(id: number, content: Partial<InsertContentSection>): Promise<ContentSection | undefined>;
 
   // Navigation operations
   getAllNavigationItems(): Promise<NavigationItem[]>;
   createNavigationItem(item: InsertNavigationItem): Promise<NavigationItem>;
-  updateNavigationItem(id: string, item: Partial<InsertNavigationItem>): Promise<NavigationItem | undefined>;
-  deleteNavigationItem(id: string): Promise<boolean>;
+  updateNavigationItem(id: number, item: Partial<InsertNavigationItem>): Promise<NavigationItem | undefined>;
+  deleteNavigationItem(id: number): Promise<boolean>;
 
   // Room availability methods
   getRoomAvailability(guestHouseId?: string, date?: Date): Promise<RoomAvailability[]>;
   createRoomAvailability(data: InsertRoomAvailability): Promise<RoomAvailability>;
-  updateRoomAvailability(id: string, data: Partial<InsertRoomAvailability>): Promise<RoomAvailability | null>;
-  checkRoomAvailability(guestHouseId: string, checkIn: Date, checkOut: Date): Promise<boolean>;
+  updateRoomAvailability(id: number, data: Partial<InsertRoomAvailability>): Promise<RoomAvailability | null>;
+  checkRoomAvailability(guestHouseId: number, checkIn: Date, checkOut: Date): Promise<boolean>;
 
   // Package methods
   getAllPackages(): Promise<Package[]>;
   getPackages(): Promise<Package[]>;
-  getPackage(id: string): Promise<Package | null>;
-  getPackageById(id: string): Promise<Package | null>;
+  getPackage(id: number): Promise<Package | null>;
+  getPackageById(id: number): Promise<Package | null>;
   createPackage(data: InsertPackage): Promise<Package>;
-  updatePackage(id: string, data: Partial<InsertPackage>): Promise<Package | null>;
-  deletePackage(id: string): Promise<boolean>;
+  updatePackage(id: number, data: Partial<InsertPackage>): Promise<Package | null>;
+  deletePackage(id: number): Promise<boolean>;
 
   // Package availability methods
-  getPackageAvailability(packageId?: string, date?: Date): Promise<PackageAvailability[]>;
+  getPackageAvailability(packageId?: number, date?: Date): Promise<PackageAvailability[]>;
   createPackageAvailability(data: InsertPackageAvailability): Promise<PackageAvailability>;
-  updatePackageAvailability(id: string, data: Partial<InsertPackageAvailability>): Promise<PackageAvailability | null>;
+  updatePackageAvailability(id: number, data: Partial<InsertPackageAvailability>): Promise<PackageAvailability | null>;
 
   // Enhanced booking methods
   updateAvailabilityAfterBooking(booking: Booking): Promise<void>;
-  getUserBookings(userId: string): Promise<Booking[]>;
-  updateBookingStatus(bookingId: string, status: string): Promise<Booking | null>;
+  getUserBookings(userId: number): Promise<Booking[]>;
+  updateBookingStatus(bookingId: number, status: string): Promise<Booking | null>;
 }
 
 export class DatabaseStorage implements IStorage {
   // User operations
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
@@ -159,7 +147,7 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUser(id: string, updateUser: Partial<InsertUser>): Promise<User | undefined> {
+  async updateUser(id: number, updateUser: Partial<InsertUser>): Promise<User | undefined> {
     const [user] = await db.update(users)
       .set({ ...updateUser, updatedAt: new Date() })
       .where(eq(users.id, id))
@@ -168,12 +156,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Agent operations
-  async getAgent(id: string): Promise<Agent | undefined> {
+  async getAgent(id: number): Promise<Agent | undefined> {
     const [agent] = await db.select().from(agents).where(eq(agents.id, id));
     return agent || undefined;
   }
 
-  async getAgentByUserId(userId: string): Promise<Agent | undefined> {
+  async getAgentByUserId(userId: number): Promise<Agent | undefined> {
     const [agent] = await db.select().from(agents).where(eq(agents.userId, userId));
     return agent || undefined;
   }
@@ -183,7 +171,7 @@ export class DatabaseStorage implements IStorage {
     return agent;
   }
 
-  async updateAgent(id: string, updateAgent: Partial<InsertAgent>): Promise<Agent | undefined> {
+  async updateAgent(id: number, updateAgent: Partial<InsertAgent>): Promise<Agent | undefined> {
     const [agent] = await db.update(agents)
       .set(updateAgent)
       .where(eq(agents.id, id))
@@ -200,7 +188,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Guest House operations
-  async getGuestHouse(id: string): Promise<GuestHouse | undefined> {
+  async getGuestHouse(id: number): Promise<GuestHouse | undefined> {
     const [guestHouse] = await db.select().from(guestHouses).where(eq(guestHouses.id, id));
     return guestHouse || undefined;
   }
@@ -244,7 +232,7 @@ export class DatabaseStorage implements IStorage {
     return guestHouse;
   }
 
-  async updateGuestHouse(id: string, updateGuestHouse: Partial<InsertGuestHouse>): Promise<GuestHouse | undefined> {
+  async updateGuestHouse(id: number, updateGuestHouse: Partial<InsertGuestHouse>): Promise<GuestHouse | undefined> {
     const [guestHouse] = await db.update(guestHouses)
       .set({ ...updateGuestHouse, updatedAt: new Date() })
       .where(eq(guestHouses.id, id))
@@ -252,30 +240,30 @@ export class DatabaseStorage implements IStorage {
     return guestHouse || undefined;
   }
 
-  async deleteGuestHouse(id: string): Promise<boolean> {
+  async deleteGuestHouse(id: number): Promise<boolean> {
     const result = await db.delete(guestHouses).where(eq(guestHouses.id, id));
     return (result.rowCount ?? 0) > 0;
   }
 
   // Booking operations
-  async getBooking(id: string): Promise<Booking | undefined> {
+  async getBooking(id: number): Promise<Booking | undefined> {
     const [booking] = await db.select().from(bookings).where(eq(bookings.id, id));
     return booking || undefined;
   }
 
-  async getBookingsByUser(userId: string): Promise<Booking[]> {
+  async getBookingsByUser(userId: number): Promise<Booking[]> {
     return await db.select().from(bookings)
       .where(eq(bookings.userId, userId))
       .orderBy(desc(bookings.createdAt));
   }
 
-  async getBookingsByAgent(agentId: string): Promise<Booking[]> {
+  async getBookingsByAgent(agentId: number): Promise<Booking[]> {
     return await db.select().from(bookings)
       .where(eq(bookings.agentId, agentId))
       .orderBy(desc(bookings.createdAt));
   }
 
-  async getBookingsByGuestHouse(guestHouseId: string): Promise<Booking[]> {
+  async getBookingsByGuestHouse(guestHouseId: number): Promise<Booking[]> {
     return await db.select().from(bookings)
       .where(eq(bookings.guestHouseId, guestHouseId))
       .orderBy(desc(bookings.createdAt));
@@ -286,7 +274,7 @@ export class DatabaseStorage implements IStorage {
     return booking;
   }
 
-  async updateBooking(id: string, updateBooking: Partial<InsertBooking>): Promise<Booking | undefined> {
+  async updateBooking(id: number, updateBooking: Partial<InsertBooking>): Promise<Booking | undefined> {
     const [booking] = await db.update(bookings)
       .set({ ...updateBooking, updatedAt: new Date() })
       .where(eq(bookings.id, id))
@@ -294,7 +282,7 @@ export class DatabaseStorage implements IStorage {
     return booking || undefined;
   }
 
-  async getBookingAvailability(guestHouseId: string, checkIn: Date, checkOut: Date): Promise<boolean> {
+  async getBookingAvailability(guestHouseId: number, checkIn: Date, checkOut: Date): Promise<boolean> {
     const conflictingBookings = await db.select().from(bookings)
       .where(
         and(
@@ -330,7 +318,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(experiences.rating));
   }
 
-  async getExperience(id: string): Promise<Experience | undefined> {
+  async getExperience(id: number): Promise<Experience | undefined> {
     const [experience] = await db.select().from(experiences).where(eq(experiences.id, id));
     return experience || undefined;
   }
@@ -340,7 +328,7 @@ export class DatabaseStorage implements IStorage {
     return experience;
   }
 
-  async updateExperience(id: string, updateExperience: Partial<InsertExperience>): Promise<Experience | undefined> {
+  async updateExperience(id: number, updateExperience: Partial<InsertExperience>): Promise<Experience | undefined> {
     const [experience] = await db.update(experiences)
       .set({ ...updateExperience })
       .where(eq(experiences.id, id))
@@ -348,7 +336,7 @@ export class DatabaseStorage implements IStorage {
     return experience || undefined;
   }
 
-  async deleteExperience(id: string): Promise<boolean> {
+  async deleteExperience(id: number): Promise<boolean> {
     const result = await db.delete(experiences).where(eq(experiences.id, id));
     return (result.rowCount ?? 0) > 0;
   }
@@ -379,7 +367,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(ferrySchedules.departureTime);
   }
 
-  async getFerrySchedule(id: string): Promise<FerrySchedule | undefined> {
+  async getFerrySchedule(id: number): Promise<FerrySchedule | undefined> {
     const [schedule] = await db.select().from(ferrySchedules).where(eq(ferrySchedules.id, id));
     return schedule || undefined;
   }
@@ -389,7 +377,7 @@ export class DatabaseStorage implements IStorage {
     return schedule;
   }
 
-  async updateFerrySchedule(id: string, updateSchedule: Partial<InsertFerrySchedule>): Promise<FerrySchedule | undefined> {
+  async updateFerrySchedule(id: number, updateSchedule: Partial<InsertFerrySchedule>): Promise<FerrySchedule | undefined> {
     const [schedule] = await db.update(ferrySchedules)
       .set({ ...updateSchedule })
       .where(eq(ferrySchedules.id, id))
@@ -397,7 +385,7 @@ export class DatabaseStorage implements IStorage {
     return schedule || undefined;
   }
 
-  async deleteFerrySchedule(id: string): Promise<boolean> {
+  async deleteFerrySchedule(id: number): Promise<boolean> {
     const result = await db.delete(ferrySchedules).where(eq(ferrySchedules.id, id));
     return (result.rowCount ?? 0) > 0;
   }
@@ -428,7 +416,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(domesticAirlines.departureTime);
   }
 
-  async getDomesticAirline(id: string): Promise<DomesticAirline | undefined> {
+  async getDomesticAirline(id: number): Promise<DomesticAirline | undefined> {
     const [airline] = await db.select().from(domesticAirlines).where(eq(domesticAirlines.id, id));
     return airline || undefined;
   }
@@ -438,7 +426,7 @@ export class DatabaseStorage implements IStorage {
     return airline;
   }
 
-  async updateDomesticAirline(id: string, updateAirline: Partial<InsertDomesticAirline>): Promise<DomesticAirline | undefined> {
+  async updateDomesticAirline(id: number, updateAirline: Partial<InsertDomesticAirline>): Promise<DomesticAirline | undefined> {
     const [airline] = await db.update(domesticAirlines)
       .set({ ...updateAirline, updatedAt: new Date() })
       .where(eq(domesticAirlines.id, id))
@@ -446,7 +434,7 @@ export class DatabaseStorage implements IStorage {
     return airline || undefined;
   }
 
-  async deleteDomesticAirline(id: string): Promise<boolean> {
+  async deleteDomesticAirline(id: number): Promise<boolean> {
     const result = await db.delete(domesticAirlines).where(eq(domesticAirlines.id, id));
     return (result.rowCount ?? 0) > 0;
   }
@@ -463,13 +451,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Review operations
-  async getReviewsByGuestHouse(guestHouseId: string): Promise<Review[]> {
+  async getReviewsByGuestHouse(guestHouseId: number): Promise<Review[]> {
     return await db.select().from(reviews)
       .where(eq(reviews.guestHouseId, guestHouseId))
       .orderBy(desc(reviews.createdAt));
   }
 
-  async getReviewsByUser(userId: string): Promise<Review[]> {
+  async getReviewsByUser(userId: number): Promise<Review[]> {
     return await db.select().from(reviews)
       .where(eq(reviews.userId, userId))
       .orderBy(desc(reviews.createdAt));
@@ -493,12 +481,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Loyalty Program operations
-  async getLoyaltyProgram(userId: string): Promise<LoyaltyProgram | undefined> {
+  async getLoyaltyProgram(userId: number): Promise<LoyaltyProgram | undefined> {
     const [program] = await db.select().from(loyaltyProgram).where(eq(loyaltyProgram.userId, userId));
     return program || undefined;
   }
 
-  async updateLoyaltyPoints(userId: string, points: number): Promise<LoyaltyProgram | undefined> {
+  async updateLoyaltyPoints(userId: number, points: number): Promise<LoyaltyProgram | undefined> {
     const [program] = await db.update(loyaltyProgram)
       .set({ 
         points: sql`${loyaltyProgram.points} + ${points}`,
@@ -527,7 +515,7 @@ export class DatabaseStorage implements IStorage {
     return section;
   }
 
-  async updateContentSection(id: string, updateContent: Partial<InsertContentSection>): Promise<ContentSection | undefined> {
+  async updateContentSection(id: number, updateContent: Partial<InsertContentSection>): Promise<ContentSection | undefined> {
     const [section] = await db.update(contentSections)
       .set({ ...updateContent, updatedAt: new Date() })
       .where(eq(contentSections.id, id))
@@ -547,7 +535,7 @@ export class DatabaseStorage implements IStorage {
     return item;
   }
 
-  async updateNavigationItem(id: string, updateItem: Partial<InsertNavigationItem>): Promise<NavigationItem | undefined> {
+  async updateNavigationItem(id: number, updateItem: Partial<InsertNavigationItem>): Promise<NavigationItem | undefined> {
     const [item] = await db.update(navigationItems)
       .set(updateItem)
       .where(eq(navigationItems.id, id))
@@ -555,7 +543,7 @@ export class DatabaseStorage implements IStorage {
     return item || undefined;
   }
 
-  async deleteNavigationItem(id: string): Promise<boolean> {
+  async deleteNavigationItem(id: number): Promise<boolean> {
     const result = await db.delete(navigationItems).where(eq(navigationItems.id, id));
     return (result.rowCount ?? 0) > 0;
   }
@@ -565,12 +553,12 @@ export class DatabaseStorage implements IStorage {
     if (guestHouseId && date) {
       return await db.select().from(roomAvailability)
         .where(and(
-          eq(roomAvailability.guestHouseId, guestHouseId),
+          eq(roomAvailability.guestHouseId, parseInt(guestHouseId)),
           eq(roomAvailability.date, date)
         ));
     } else if (guestHouseId) {
       return await db.select().from(roomAvailability)
-        .where(eq(roomAvailability.guestHouseId, guestHouseId));
+        .where(eq(roomAvailability.guestHouseId, parseInt(guestHouseId)));
     }
     return await db.select().from(roomAvailability);
   }
@@ -580,7 +568,7 @@ export class DatabaseStorage implements IStorage {
     return availability;
   }
 
-  async updateRoomAvailability(id: string, data: Partial<InsertRoomAvailability>): Promise<RoomAvailability | null> {
+  async updateRoomAvailability(id: number, data: Partial<InsertRoomAvailability>): Promise<RoomAvailability | null> {
     const [updated] = await db.update(roomAvailability)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(roomAvailability.id, id))
@@ -588,7 +576,7 @@ export class DatabaseStorage implements IStorage {
     return updated || null;
   }
 
-  async checkRoomAvailability(guestHouseId: string, checkIn: Date, checkOut: Date): Promise<boolean> {
+  async checkRoomAvailability(guestHouseId: number, checkIn: Date, checkOut: Date): Promise<boolean> {
     const availabilities = await db.select().from(roomAvailability)
       .where(and(
         eq(roomAvailability.guestHouseId, guestHouseId),
@@ -596,7 +584,7 @@ export class DatabaseStorage implements IStorage {
         lte(roomAvailability.date, checkOut)
       ));
     
-    return availabilities.every(a => a.availableRooms > 0);
+    return availabilities.every((a: RoomAvailability) => a.availableRooms > 0);
   }
 
   // Package methods
@@ -608,12 +596,12 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(packages).where(eq(packages.isActive, true));
   }
 
-  async getPackage(id: string): Promise<Package | null> {
+  async getPackage(id: number): Promise<Package | null> {
     const [pkg] = await db.select().from(packages).where(eq(packages.id, id));
     return pkg || null;
   }
 
-  async getPackageById(id: string): Promise<Package | null> {
+  async getPackageById(id: number): Promise<Package | null> {
     const [pkg] = await db.select().from(packages).where(eq(packages.id, id));
     return pkg || null;
   }
@@ -623,7 +611,7 @@ export class DatabaseStorage implements IStorage {
     return pkg;
   }
 
-  async updatePackage(id: string, data: Partial<InsertPackage>): Promise<Package | null> {
+  async updatePackage(id: number, data: Partial<InsertPackage>): Promise<Package | null> {
     const [updated] = await db.update(packages)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(packages.id, id))
@@ -631,13 +619,13 @@ export class DatabaseStorage implements IStorage {
     return updated || null;
   }
 
-  async deletePackage(id: string): Promise<boolean> {
+  async deletePackage(id: number): Promise<boolean> {
     const result = await db.delete(packages).where(eq(packages.id, id));
     return (result.rowCount ?? 0) > 0;
   }
 
   // Package availability methods
-  async getPackageAvailability(packageId?: string, date?: Date): Promise<PackageAvailability[]> {
+  async getPackageAvailability(packageId?: number, date?: Date): Promise<PackageAvailability[]> {
     if (packageId && date) {
       return await db.select().from(packageAvailability)
         .where(and(
@@ -656,7 +644,7 @@ export class DatabaseStorage implements IStorage {
     return availability;
   }
 
-  async updatePackageAvailability(id: string, data: Partial<InsertPackageAvailability>): Promise<PackageAvailability | null> {
+  async updatePackageAvailability(id: number, data: Partial<InsertPackageAvailability>): Promise<PackageAvailability | null> {
     const [updated] = await db.update(packageAvailability)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(packageAvailability.id, id))
@@ -684,13 +672,13 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getUserBookings(userId: string): Promise<Booking[]> {
+  async getUserBookings(userId: number): Promise<Booking[]> {
     return await db.select().from(bookings)
       .where(eq(bookings.userId, userId))
       .orderBy(desc(bookings.createdAt));
   }
 
-  async updateBookingStatus(bookingId: string, status: string): Promise<Booking | null> {
+  async updateBookingStatus(bookingId: number, status: string): Promise<Booking | null> {
     const [updated] = await db.update(bookings)
       .set({ status, updatedAt: new Date() })
       .where(eq(bookings.id, bookingId))

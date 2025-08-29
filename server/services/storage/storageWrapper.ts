@@ -1,6 +1,6 @@
-// import { DatabaseStorage } from "./storage";
-// import { mockStorage } from "./mockStorage";
-// import type { IStorage } from "./storage";
+import { DatabaseStorage } from "./storage";
+import { mockStorage } from "./mockStorage";
+import type { IStorage } from "./storage";
 
 class StorageWrapper implements IStorage {
   private useDatabase = true;
@@ -33,7 +33,7 @@ class StorageWrapper implements IStorage {
   }
 
   // User operations
-  async getUser(id: string) {
+  async getUser(id: number) {
     return this.tryWithFallback(storage => storage.getUser(id));
   }
 
@@ -49,16 +49,16 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createUser(user));
   }
 
-  async updateUser(id: string, user: any) {
+  async updateUser(id: number, user: any) {
     return this.tryWithFallback(storage => storage.updateUser(id, user));
   }
 
   // Agent operations
-  async getAgent(id: string) {
+  async getAgent(id: number) {
     return this.tryWithFallback(storage => storage.getAgent(id));
   }
 
-  async getAgentByUserId(userId: string) {
+  async getAgentByUserId(userId: number) {
     return this.tryWithFallback(storage => storage.getAgentByUserId(userId));
   }
 
@@ -66,7 +66,7 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createAgent(agent));
   }
 
-  async updateAgent(id: string, agent: any) {
+  async updateAgent(id: number, agent: any) {
     return this.tryWithFallback(storage => storage.updateAgent(id, agent));
   }
 
@@ -79,7 +79,7 @@ class StorageWrapper implements IStorage {
   }
 
   // Guest House operations
-  async getGuestHouse(id: string) {
+  async getGuestHouse(id: number) {
     return this.tryWithFallback(storage => storage.getGuestHouse(id));
   }
 
@@ -103,11 +103,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createGuestHouse(guestHouse));
   }
 
-  async updateGuestHouse(id: string, guestHouse: any) {
+  async updateGuestHouse(id: number, guestHouse: any) {
     return this.tryWithFallback(storage => storage.updateGuestHouse(id, guestHouse));
   }
 
-  async deleteGuestHouse(id: string) {
+  async deleteGuestHouse(id: number) {
     return this.tryWithFallback(storage => storage.deleteGuestHouse(id), false);
   }
 
@@ -121,7 +121,7 @@ class StorageWrapper implements IStorage {
     }, []);
   }
 
-  async getIsland(id: string) {
+  async getIsland(id: number) {
     return this.tryWithFallback(storage => (storage as any).getIsland(id));
   }
 
@@ -138,7 +138,7 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.getExperiencesByCategory(category), []);
   }
 
-  async getExperience(id: string) {
+  async getExperience(id: number) {
     return this.tryWithFallback(storage => storage.getExperience(id));
   }
 
@@ -146,11 +146,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createExperience(experience));
   }
 
-  async updateExperience(id: string, experience: any) {
+  async updateExperience(id: number, experience: any) {
     return this.tryWithFallback(storage => storage.updateExperience(id, experience));
   }
 
-  async deleteExperience(id: string) {
+  async deleteExperience(id: number) {
     return this.tryWithFallback(storage => storage.deleteExperience(id), false);
   }
 
@@ -163,7 +163,7 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.searchFerrySchedules(from, to, date), []);
   }
 
-  async getFerrySchedule(id: string) {
+  async getFerrySchedule(id: number) {
     return this.tryWithFallback(storage => storage.getFerrySchedule(id));
   }
 
@@ -171,11 +171,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createFerrySchedule(schedule));
   }
 
-  async updateFerrySchedule(id: string, schedule: any) {
+  async updateFerrySchedule(id: number, schedule: any) {
     return this.tryWithFallback(storage => storage.updateFerrySchedule(id, schedule));
   }
 
-  async deleteFerrySchedule(id: string) {
+  async deleteFerrySchedule(id: number) {
     return this.tryWithFallback(storage => storage.deleteFerrySchedule(id), false);
   }
 
@@ -188,7 +188,7 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.searchDomesticAirlines(from, to, date), []);
   }
 
-  async getDomesticAirline(id: string) {
+  async getDomesticAirline(id: number) {
     return this.tryWithFallback(storage => storage.getDomesticAirline(id));
   }
 
@@ -196,11 +196,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createDomesticAirline(airline));
   }
 
-  async updateDomesticAirline(id: string, airline: any) {
+  async updateDomesticAirline(id: number, airline: any) {
     return this.tryWithFallback(storage => storage.updateDomesticAirline(id, airline));
   }
 
-  async deleteDomesticAirline(id: string) {
+  async deleteDomesticAirline(id: number) {
     return this.tryWithFallback(storage => storage.deleteDomesticAirline(id), false);
   }
 
@@ -217,11 +217,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.getPackages(), []);
   }
 
-  async getPackage(id: string) {
+  async getPackage(id: number) {
     return this.tryWithFallback(storage => storage.getPackage(id));
   }
 
-  async getPackageById(id: string) {
+  async getPackageById(id: number) {
     return this.tryWithFallback(storage => storage.getPackageById(id));
   }
 
@@ -229,28 +229,28 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createPackage(data));
   }
 
-  async updatePackage(id: string, data: any) {
+  async updatePackage(id: number, data: any) {
     return this.tryWithFallback(storage => storage.updatePackage(id, data));
   }
 
-  async deletePackage(id: string) {
+  async deletePackage(id: number) {
     return this.tryWithFallback(storage => storage.deletePackage(id), false);
   }
 
   // Booking operations
-  async getBooking(id: string) {
+  async getBooking(id: number) {
     return this.tryWithFallback(storage => storage.getBooking(id));
   }
 
-  async getBookingsByUser(userId: string) {
+  async getBookingsByUser(userId: number) {
     return this.tryWithFallback(storage => storage.getBookingsByUser(userId), []);
   }
 
-  async getBookingsByAgent(agentId: string) {
+  async getBookingsByAgent(agentId: number) {
     return this.tryWithFallback(storage => storage.getBookingsByAgent(agentId), []);
   }
 
-  async getBookingsByGuestHouse(guestHouseId: string) {
+  async getBookingsByGuestHouse(guestHouseId: number) {
     return this.tryWithFallback(storage => storage.getBookingsByGuestHouse(guestHouseId), []);
   }
 
@@ -258,20 +258,20 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createBooking(booking));
   }
 
-  async updateBooking(id: string, booking: any) {
+  async updateBooking(id: number, booking: any) {
     return this.tryWithFallback(storage => storage.updateBooking(id, booking));
   }
 
-  async getBookingAvailability(guestHouseId: string, checkIn: Date, checkOut: Date) {
+  async getBookingAvailability(guestHouseId: number, checkIn: Date, checkOut: Date) {
     return this.tryWithFallback(storage => storage.getBookingAvailability(guestHouseId, checkIn, checkOut), true);
   }
 
   // Review operations
-  async getReviewsByGuestHouse(guestHouseId: string) {
+  async getReviewsByGuestHouse(guestHouseId: number) {
     return this.tryWithFallback(storage => storage.getReviewsByGuestHouse(guestHouseId), []);
   }
 
-  async getReviewsByUser(userId: string) {
+  async getReviewsByUser(userId: number) {
     return this.tryWithFallback(storage => storage.getReviewsByUser(userId), []);
   }
 
@@ -289,11 +289,11 @@ class StorageWrapper implements IStorage {
   }
 
   // Loyalty Program operations
-  async getLoyaltyProgram(userId: string) {
+  async getLoyaltyProgram(userId: number) {
     return this.tryWithFallback(storage => storage.getLoyaltyProgram(userId));
   }
 
-  async updateLoyaltyPoints(userId: string, points: number) {
+  async updateLoyaltyPoints(userId: number, points: number) {
     return this.tryWithFallback(storage => storage.updateLoyaltyPoints(userId, points));
   }
 
@@ -310,7 +310,7 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createContentSection(content));
   }
 
-  async updateContentSection(id: string, content: any) {
+  async updateContentSection(id: number, content: any) {
     return this.tryWithFallback(storage => storage.updateContentSection(id, content));
   }
 
@@ -323,11 +323,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createNavigationItem(item));
   }
 
-  async updateNavigationItem(id: string, item: any) {
+  async updateNavigationItem(id: number, item: any) {
     return this.tryWithFallback(storage => storage.updateNavigationItem(id, item));
   }
 
-  async deleteNavigationItem(id: string) {
+  async deleteNavigationItem(id: number) {
     return this.tryWithFallback(storage => storage.deleteNavigationItem(id), false);
   }
 
@@ -340,16 +340,16 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createRoomAvailability(data));
   }
 
-  async updateRoomAvailability(id: string, data: any) {
+  async updateRoomAvailability(id: number, data: any) {
     return this.tryWithFallback(storage => storage.updateRoomAvailability(id, data));
   }
 
-  async checkRoomAvailability(guestHouseId: string, checkIn: Date, checkOut: Date) {
+  async checkRoomAvailability(guestHouseId: number, checkIn: Date, checkOut: Date) {
     return this.tryWithFallback(storage => storage.checkRoomAvailability(guestHouseId, checkIn, checkOut), true);
   }
 
   // Package availability operations
-  async getPackageAvailability(packageId?: string, date?: Date) {
+  async getPackageAvailability(packageId?: number, date?: Date) {
     return this.tryWithFallback(storage => storage.getPackageAvailability(packageId, date), []);
   }
 
@@ -357,7 +357,7 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.createPackageAvailability(data));
   }
 
-  async updatePackageAvailability(id: string, data: any) {
+  async updatePackageAvailability(id: number, data: any) {
     return this.tryWithFallback(storage => storage.updatePackageAvailability(id, data));
   }
 
@@ -366,11 +366,11 @@ class StorageWrapper implements IStorage {
     return this.tryWithFallback(storage => storage.updateAvailabilityAfterBooking(booking));
   }
 
-  async getUserBookings(userId: string) {
+  async getUserBookings(userId: number) {
     return this.tryWithFallback(storage => storage.getUserBookings(userId), []);
   }
 
-  async updateBookingStatus(bookingId: string, status: string) {
+  async updateBookingStatus(bookingId: number, status: string) {
     return this.tryWithFallback(storage => storage.updateBookingStatus(bookingId, status));
   }
 }

@@ -1,6 +1,7 @@
 import { db } from "@/models/db";
 import { users } from "@shared/schema";
 import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 
 async function seedAdminUser() {
   try {
@@ -22,10 +23,6 @@ async function seedAdminUser() {
       firstName: "Niyali",
       lastName: "Admin",
       role: "admin",
-      isAdmin: true,
-      isVerified: true,
-      phone: "+9609107338",
-      country: "Maldives"
     }).returning();
 
     console.log("Admin user created successfully:");
@@ -38,9 +35,6 @@ async function seedAdminUser() {
     console.error("Error seeding admin user:", error);
   }
 }
-
-// Import eq from drizzle-orm
-import { eq } from "drizzle-orm";
 
 // Run the seed function
 seedAdminUser().then(() => {

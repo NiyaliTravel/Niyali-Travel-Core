@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import db from '../../utils/db'; // Supabase client
+import db from '../utils/db'; // Supabase client
 
 export const getGuestHouses = async (_req: Request, res: Response) => {
   const { data, error } = await db.from('guesthouses').select('*');

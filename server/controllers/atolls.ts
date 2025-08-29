@@ -1,30 +1,54 @@
 import { Request, Response } from 'express';
-import db from '../../utils/db'; // Supabase client
+import { db } from '@/models/db';
+import { atolls } from '@shared/schema';
+import { eq } from 'drizzle-orm';
 
 export const getAtolls = async (_req: Request, res: Response) => {
-  const { data, error } = await db.from('atolls').select('*');
-  if (error) return res.status(500).json({ error });
-  res.json(data);
+  try {
+    const result = await db.select().from(atolls);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error fetching atolls:', error);
+    res.status(500).json({ message: 'Failed to fetch atolls', error: (error as Error).message });
+  }
 };
 
 export const createAtoll = async (req: Request, res: Response) => {
-  const { name, description, image_url } = req.body;
-  const { data, error } = await db.from('atolls').insert([{ name, description, image_url }]);
-  if (error) return res.status(500).json({ error });
-  res.status(201).json(data);
+  try {
+    const { name, description, image_url } = req.body;
+    const [newAtoll] = await db.insert(atolls).values({ name, description, image_url }).returning();
+    res.status(201).json(newAtoll);
+  } catch (error) {
+    console.error('Error creating atoll:', error);
+    res.status(500).json({ message: 'Failed to create atoll', error: (error as Error).message });
+  }
 };
 
 export const updateAtoll = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const updates = req.body;
-  const { data, error } = await db.from('atolls').update(updates).eq('id', id);
-  if (error) return res.status(500).json({ error });
-  res.json(data);
+  try {
+    const { id } = req.params;
+    const { name, description, image_url } = req.body;
+    const [updatedAtoll] = await db.update(atolls).set({ name, description, image_url }).where(eq(atolls.id, parseInt(id))).returning();
+    if (!updatedAtoll) {
+      return res.status(404).json({ message: 'Atoll not found' });
+    }
+    res.status(200).json(updatedAtoll);
+  } catch (error) {
+    console.error('Error updating atoll:', error);
+    res.status(500).json({ message: 'Failed to update atoll', error: (error as Error).message });
+  }
 };
 
 export const deleteAtoll = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { error } = await db.from('atolls').delete().eq('id', id);
-  if (error) return res.status(500).json({ error });
-  res.status(204).end();
+  try {
+    const { id } = req.params;
+    const [deletedAtoll] = await db.delete(atolls).where(eq(atolls.id, parseInt(id))).returning();
+     if (!deletedAtoll) {
+      return res.status(404).json({ message: 'Atoll not found' });
+    }
+    res.status(204).end();
+  } catch (error) {
+    console.error('Error deleting atoll:', error);
+    res.status(500).json({ message: 'Failed to delete atoll', error: (error as Error).message });
+  }
 };

@@ -36,7 +36,7 @@ export async function analyzeSentiment(text: string): Promise<{
       confidence: Math.max(0, Math.min(1, result.confidence)),
     };
   } catch (error) {
-    throw new Error("Failed to analyze sentiment: " + error.message);
+    throw new Error("Failed to analyze sentiment: " + (error as Error).message);
   }
 }
 
@@ -71,7 +71,7 @@ export async function generateChatResponse(message: string, context?: string): P
     }
     return response.choices[0].message.content;
   } catch (error) {
-    throw new Error("Failed to generate chat response: " + error.message);
+    throw new Error("Failed to generate chat response: " + (error as Error).message);
   }
 }
 

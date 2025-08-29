@@ -3,13 +3,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./*"],
       "@assets/*": ["./assets/*"],
       "@shared/*": ["../shared/*"]
     },
     "outDir": "../dist/client",
     "jsx": "react-jsx",
-    "moduleResolution": "node"
+    "moduleResolution": "bundler"
   },
   "include": ["**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]

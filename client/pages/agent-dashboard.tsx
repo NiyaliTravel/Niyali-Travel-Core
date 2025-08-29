@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../utils/supabase.ts';
+import { supabase } from '@/Utills/supabase';
 
 export default function AgentDashboard() {
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchBookings = async () => {
