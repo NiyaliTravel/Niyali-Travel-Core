@@ -1,11 +1,11 @@
 # Build stage
 FROM node:20-alpine as builder
 WORKDIR /usr/src/app
-COPY package*.json ./
-COPY ../tsconfig.json ./
-COPY ../shared ./shared
+COPY client/package*.json ./
+COPY tsconfig.json ./
+COPY shared ./shared
 RUN npm install
-COPY . .
+COPY client/ .
 RUN npm run build
 
 # Production stage
