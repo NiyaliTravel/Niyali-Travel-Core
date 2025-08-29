@@ -1,6 +1,5 @@
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import {
@@ -15,7 +14,8 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Fetch guest houses for dropdown
   const { data: guestHouses = [] } = useQuery<any[]>({
@@ -60,7 +60,7 @@ export default function Navigation() {
                 passHref
               >
                 <a className={`text-gray-700 hover:text-niyali-navy transition-colors ${
-                  router.pathname === item.href ? 'text-niyali-navy font-medium' : ''
+                  location.pathname === item.href ? 'text-niyali-navy font-medium' : ''
                 }`}
                 data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}>
                   {item.label}
@@ -119,7 +119,7 @@ export default function Navigation() {
                       passHref
                     >
                       <a onClick={() => setIsOpen(false)} className={`text-lg text-gray-700 hover:text-niyali-navy transition-colors ${
-                        router.pathname === item.href ? 'text-niyali-navy font-medium' : ''
+                        location.pathname === item.href ? 'text-niyali-navy font-medium' : ''
                       }`}
                       data-testid={`mobile-nav-${item.label.toLowerCase().replace(' ', '-')}`}>
                         {item.label}

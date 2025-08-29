@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../Utills/supabaseClient';
+import { supabase } from '@/Utills/supabase';
 import AdminTable from './AdminTable';
 import Modal from './Modal';
 import GuesthouseForm from './GuesthouseForm';

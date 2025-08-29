@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../../Utills/supabaseClient';
+import { supabase } from '@/Utills/supabase';
 import AvailabilityManager from '../../components/admin/availabilityManager';
 
 export default function AdminDashboard() {

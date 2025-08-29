@@ -14,15 +14,15 @@
       ]
     },
     "outDir": "../dist/client",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "moduleResolution": "bundler",
-    "target": "ES2017",
+    "target": "ESNext",
+    "module": "ESNext",
     "allowJs": true,
     "resolveJsonModule": true,
     "isolatedModules": true
   },
   "include": [
-    "next-env.d.ts",
     "**/*"
   ],
   "exclude": [

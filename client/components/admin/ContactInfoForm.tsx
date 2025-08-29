@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../Utills/supabaseClient';
+import { supabase } from '@/Utills/supabase';
 
 export default function ContactInfoForm() {
   const [info, setInfo] = useState({ phone: '', email: '', address: '', mapembed: '' });

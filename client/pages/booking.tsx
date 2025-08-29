@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../Utills/supabaseClient';
+import { supabase } from '@/Utills/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { Calendar } from '../components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';

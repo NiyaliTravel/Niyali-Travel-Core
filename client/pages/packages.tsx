@@ -8,11 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Clock, Users, Check, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Packages() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [durationFilter, setDurationFilter] = useState("all");
   const [priceRange, setPriceRange] = useState("any");
@@ -232,7 +231,7 @@ export default function Packages() {
                           Details
                         </Button></a>
                       </Link>
-                      <Button size="sm" className="niyali-gradient text-white" data-testid={`button-book-${pkg.id}`} onClick={() => router.push(`/booking?package=${pkg.id}`)}>
+                      <Button size="sm" className="niyali-gradient text-white" data-testid={`button-book-${pkg.id}`} onClick={() => navigate(`/booking?package=${pkg.id}`)}>
                         Book Now
                       </Button>
                     </div>
