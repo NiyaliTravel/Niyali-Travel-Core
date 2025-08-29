@@ -8,9 +8,6 @@ COPY client/package.json ./client/
 COPY server/package.json ./server/
 COPY shared/package.json ./shared/
 
-COPY tsconfig.json ./
-COPY client/tsconfig.json ./client/
-
 # Install all dependencies
 RUN npm install
 

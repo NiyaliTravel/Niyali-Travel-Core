@@ -5,9 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    },
-    "allowSyntheticDefaultImports": true,
-    "moduleResolution": "bundler"
+    }
   },
   "include": ["**/*"],
   "exclude": ["node_modules", "dist"]
