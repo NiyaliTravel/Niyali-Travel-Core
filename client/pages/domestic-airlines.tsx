@@ -276,7 +276,7 @@ export default function DomesticAirlines() {
                     <div>
                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Operating Days:</p>
                       <div className="flex flex-wrap gap-1">
-                        {airline.operatingDays.map((day) => (
+                        {airline.operatingDays.map((day: string) => (
                           <Badge key={day} variant="outline" className="text-xs">
                             {day.slice(0, 3)}
                           </Badge>
