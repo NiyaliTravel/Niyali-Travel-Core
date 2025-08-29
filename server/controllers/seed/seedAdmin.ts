@@ -14,7 +14,10 @@ async function seedAdminUser() {
     }
 
     // Create admin user with hashed password
-    const hashedPassword = await bcrypt.hash("NiyaliAdmin2025!", 10);
+    if (!process.env.ADMIN_PASSWORD) {
+      throw new Error("ADMIN_PASSWORD is not set");
+    }
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
     
     const adminUser = await db.insert(users).values({
       username: "admin",
@@ -27,7 +30,7 @@ async function seedAdminUser() {
 
     console.log("Admin user created successfully:");
     console.log("Email: admin@niyalitravel.com");
-    console.log("Password: NiyaliAdmin2025!");
+    console.log("Password: [set from environment variable]");
     console.log("Please change this password after first login!");
     
     return adminUser[0];
