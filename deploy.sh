@@ -36,9 +36,11 @@ print_status "Environment file found ✅"
 print_status "Pulling latest changes from GitHub..."
 git pull origin main
 
-# Install dependencies
-print_status "Installing dependencies..."
-npm ci
+# Clean and reinstall dependencies
+print_status "Cleaning and installing dependencies..."
+rm -f package-lock.json
+rm -rf node_modules
+npm install
 
 # Build the application
 print_status "Building client application..."

@@ -18,8 +18,11 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Clean install dependencies
+        run: |
+          rm -f package-lock.json
+          rm -rf node_modules
+          npm install
 
       - name: Build client
         run: npm run build --workspace=client
@@ -37,8 +40,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
             cd /var/www/niyali-travel-core &&
             git pull origin main &&
-            npm ci &&
+            rm -f package-lock.json &&
+            rm -rf node_modules &&
+            npm install &&
             npm run build &&
             pm2 restart niyali-travel-server &&
-            sudo systemctl reload nginx
-          "
+            sudo systemctl reload nginx"
