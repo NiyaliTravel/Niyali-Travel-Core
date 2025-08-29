@@ -8,10 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar, Clock, Users, Check, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Packages() {
-  const [, navigate] = useLocation();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [durationFilter, setDurationFilter] = useState("all");
   const [priceRange, setPriceRange] = useState("any");
@@ -226,12 +227,12 @@ export default function Packages() {
                       <span className="text-gray-500 text-sm">/package</span>
                     </div>
                     <div className="flex gap-2">
-                      <Link href={`/packages/${pkg.id}`}>
-                        <Button size="sm" variant="outline" data-testid={`button-details-${pkg.id}`}>
+                      <Link href={`/packages/${pkg.id}`} passHref>
+                        <a><Button size="sm" variant="outline" data-testid={`button-details-${pkg.id}`}>
                           Details
-                        </Button>
+                        </Button></a>
                       </Link>
-                      <Button size="sm" className="niyali-gradient text-white" data-testid={`button-book-${pkg.id}`} onClick={() => navigate(`/booking?package=${pkg.id}`)}>
+                      <Button size="sm" className="niyali-gradient text-white" data-testid={`button-book-${pkg.id}`} onClick={() => router.push(`/booking?package=${pkg.id}`)}>
                         Book Now
                       </Button>
                     </div>

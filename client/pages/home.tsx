@@ -12,16 +12,16 @@ import Footer from "../components/footer";
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      <Navigation />
-      <HeroSection />
-      <FeaturedGuestHouses />
-      <ExperiencesSection />
-      <FerryScheduleWidget />
-      <DomesticAirlinesWidget />
-      <InteractiveStats />
-      <AgentPortalCTA />
-      <AIChatbotWidget />
-      <Footer />
+      {/* <Navigation /> */}
+      {/* <HeroSection /> */}
+      {/* <FeaturedGuestHouses /> */}
+      {/* <ExperiencesSection /> */}
+      {/* <FerryScheduleWidget /> */}
+      {/* <DomesticAirlinesWidget /> */}
+      {/* <InteractiveStats /> */}
+      {/* <AgentPortalCTA /> */}
+      {/* <AIChatbotWidget /> */}
+      {/* <Footer /> */}
     </div>
   );
 }

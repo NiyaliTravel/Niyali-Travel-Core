@@ -3,14 +3,31 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@assets/*": ["./assets/*"],
-      "@shared/*": ["../shared/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@assets/*": [
+        "./assets/*"
+      ],
+      "@shared/*": [
+        "../shared/*"
+      ]
     },
     "outDir": "../dist/client",
-    "jsx": "react-jsx",
-    "moduleResolution": "bundler"
+    "jsx": "preserve",
+    "moduleResolution": "bundler",
+    "target": "ES2017",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": ["**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "include": [
+    "next-env.d.ts",
+    "**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts"
+  ]
 }

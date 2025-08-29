@@ -6,10 +6,10 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/Utills/queryClient";
 import { Shield, Lock, User } from "lucide-react";
-import { useLocation } from "wouter";
+import { useRouter } from "next/router";
 
 export default function AdminLogin() {
-  const [, setLocation] = useLocation();
+  const router = useRouter();
   const [credentials, setCredentials] = useState({
     username: "",
     password: ""
@@ -32,7 +32,7 @@ export default function AdminLogin() {
           title: "Login Successful",
           description: "Welcome to admin dashboard",
         });
-        setLocation("/admin");
+        router.push("/admin");
       } else {
         toast({
           title: "Login Failed",

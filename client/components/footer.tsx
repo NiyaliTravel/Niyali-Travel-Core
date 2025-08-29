@@ -1,7 +1,6 @@
-import { Link } from "wouter";
+import Link from "next/link";
 import { Phone, Mail, MapPin } from "lucide-react";
 import SocialLinks from "./social-links";
-import NiyaliLogo from "@assets/Niyali Main Logo_1755576205013.jpg";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -34,7 +33,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <img 
-                src={NiyaliLogo} 
+                src="/Niyali Main Logo_1755576205013.jpg"
                 alt="Niyali Logo" 
                 className="w-8 h-8 object-contain"
               />
@@ -55,12 +54,12 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-300">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="hover:text-white transition-colors"
-                    data-testid={`footer-link-${link.label.toLowerCase().replace(' ', '-')}`}
+                  <Link
+                    href={link.href}
                   >
-                    {link.label}
+                    <a className="hover:text-white transition-colors" data-testid={`footer-link-${link.label.toLowerCase().replace(' ', '-')}`}>
+                      {link.label}
+                    </a>
                   </Link>
                 </li>
               ))}
@@ -73,12 +72,12 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-300">
               {supportLinks.map((link) => (
                 <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="hover:text-white transition-colors"
-                    data-testid={`footer-support-${link.label.toLowerCase().replace(' ', '-')}`}
+                  <Link
+                    href={link.href}
                   >
-                    {link.label}
+                    <a className="hover:text-white transition-colors" data-testid={`footer-support-${link.label.toLowerCase().replace(' ', '-')}`}>
+                      {link.label}
+                    </a>
                   </Link>
                 </li>
               ))}

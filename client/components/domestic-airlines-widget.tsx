@@ -6,7 +6,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Badge } from "../components/ui/badge";
 import { Plane, Clock, ArrowRight, ExternalLink } from "lucide-react";
-import { Link } from "wouter";
+import Link from "next/link";
 
 export default function DomesticAirlinesWidget() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -207,9 +207,11 @@ export default function DomesticAirlinesWidget() {
             className="bg-niyali-gradient hover:opacity-90 transition-opacity"
             data-testid="button-view-all-flights"
           >
-            <Link href="/domestic-airlines">
-              View All Domestic Flights
-              <Plane className="w-4 h-4 ml-2" />
+            <Link href="/domestic-airlines" passHref>
+              <a className="inline-flex items-center">
+                View All Domestic Flights
+                <Plane className="w-4 h-4 ml-2" />
+              </a>
             </Link>
           </Button>
         </div>

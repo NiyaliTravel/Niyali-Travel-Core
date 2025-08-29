@@ -9,16 +9,18 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --only=production
 
 # Bundle app source
 COPY . .
 
+RUN npm run build
+
 # Expose port 3000
-EXPOSE 3000
+EXPOSE 5008
 
 # Define a healthcheck to ensure the service is running
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl -f http://localhost:3000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl -f http://localhost:5008/health || exit 1
 
 # Start the Node.js application
 CMD [ "npm", "start" ]

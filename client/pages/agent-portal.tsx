@@ -13,12 +13,12 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "wouter";
+import { useRouter } from "next/router";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AgentPortal() {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [, setLocation] = useLocation();
+  const router = useRouter();
   const { toast } = useToast();
   
   // Check if agent is authenticated
@@ -30,7 +30,7 @@ export default function AgentPortal() {
         description: "Please login to access the agent portal",
         variant: "destructive"
       });
-      setLocation("/agent-login");
+      router.push("/agent-login");
     }
   }, []);
 
@@ -53,7 +53,7 @@ export default function AgentPortal() {
       title: "Logged out",
       description: "You have been logged out successfully"
     });
-    setLocation("/agent-login");
+    router.push("/agent-login");
   };
 
   return (

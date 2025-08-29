@@ -15,11 +15,11 @@ import {
   PopoverTrigger,
 } from "../components/ui/popover";
 import { Search, MapPin, Calendar, Users, Plus, Minus } from "lucide-react";
-import { useLocation } from "wouter";
+import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 
 export default function HeroSearch() {
-  const [, navigate] = useLocation();
+  const router = useRouter();
   const [destination, setDestination] = useState("");
   const [island, setIsland] = useState("");
   const [checkIn, setCheckIn] = useState("");
@@ -71,7 +71,7 @@ export default function HeroSearch() {
       children: children.toString(),
       infants: infants.toString(),
     });
-    navigate(`/booking?${searchParams.toString()}`);
+    router.push(`/booking?${searchParams.toString()}`);
   };
 
   const GuestCounter = ({ label, value, onChange, min = 0, max = 10 }: {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'wouter';
+import Link from 'next/link';
 import { MapPin, Users, Home, Activity, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -105,7 +105,9 @@ export default function Islands() {
 
             {/* Atoll Filter */}
             <div>
+              <label htmlFor="atoll-filter" className="sr-only">Filter by Atoll</label>
               <select
+                id="atoll-filter"
                 value={selectedAtoll}
                 onChange={(e) => setSelectedAtoll(e.target.value)}
                 className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-niyali-primary"
@@ -228,16 +230,16 @@ export default function Islands() {
                   )}
 
                   <div className="flex gap-2 pt-4 border-t">
-                    <Link href="/island-explorer" className="flex-1">
-                      <Button variant="outline" className="w-full" data-testid={`button-view-map-${island.id}`}>
+                    <Link href="/island-explorer" passHref>
+                      <a className="flex-1"><Button variant="outline" className="w-full" data-testid={`button-view-map-${island.id}`}>
                         View on Map
-                      </Button>
+                      </Button></a>
                     </Link>
                     {island.has_guest_houses && (
-                      <Link href={`/guest-houses?island=${island.name}`} className="flex-1">
-                        <Button className="w-full bg-niyali-gradient text-white" data-testid={`button-view-guesthouses-${island.id}`}>
+                      <Link href={`/guest-houses?island=${island.name}`} passHref>
+                        <a className="flex-1"><Button className="w-full bg-niyali-gradient text-white" data-testid={`button-view-guesthouses-${island.id}`}>
                           Guest Houses
-                        </Button>
+                        </Button></a>
                       </Link>
                     )}
                   </div>

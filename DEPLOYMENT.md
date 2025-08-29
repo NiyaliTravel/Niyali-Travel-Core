@@ -1,13 +1,14 @@
 # Deployment Guide
 
-This guide provides instructions for deploying the Niyali Travel Site to a Hostinger VPS with Ubuntu.
+This guide provides instructions for deploying the Niyali Travel Site to a Hostinger VPS with Ubuntu, using Docker for containerization and Nginx as a reverse proxy.
 
 ## Prerequisites
 
-*   A Hostinger VPS with Ubuntu installed.
-*   Node.js and npm installed on the VPS.
+*   A Hostinger VPS with Ubuntu 22.04 or later installed.
+*   Docker and Docker Compose installed on the VPS.
 *   Git installed on the VPS.
 *   A Supabase project for the database.
+*   A domain name pointed to your VPS's IP address.
 
 ## 1. Set up the Environment
 
@@ -17,17 +18,14 @@ This guide provides instructions for deploying the Niyali Travel Site to a Hosti
     cd niyali-travel-core
     ```
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    cd client
-    npm install
-    cd ../server
-    npm install
+2.  **Set up environment variables:**
+    Create a `.env.production` file in the `client` directory and add the following environment variables:
+    ```
+    VITE_SUPABASE_URL="your-supabase-project-url"
+    VITE_SUPABASE_ANON_KEY="your-supabase-anon-key"
     ```
 
-3.  **Set up environment variables:**
-    Create a `.env` file in the `server` directory and add the following environment variables:
+    Create a `.env.production` file in the `server` directory and add the following environment variables:
     ```
     DATABASE_URL="your-supabase-database-url"
     SUPABASE_URL="your-supabase-project-url"
@@ -35,41 +33,26 @@ This guide provides instructions for deploying the Niyali Travel Site to a Hosti
     JWT_SECRET="your-jwt-secret"
     ```
 
-## 2. Build the Project
+## 2. Build and Deploy with Docker
 
-1.  **Build the client:**
+1.  **Build and run the Docker containers:**
     ```bash
-    npm run build:client
+    docker-compose up --build -d
     ```
 
-2.  **Build the server:**
+2.  **Verify the containers are running:**
     ```bash
-    npm run build:server
+    docker-compose ps
     ```
 
-## 3. Deploy the Project
+## 3. Set up a Reverse Proxy with Nginx
 
-1.  **Run the server:**
-    ```bash
-    npm start
-    ```
-
-2.  **Configure a process manager:**
-    It is recommended to use a process manager like `pm2` to keep the server running in the background.
-    ```bash
-    npm install -g pm2
-    pm2 start server/dist/index.js --name niyali-travel
-    ```
-
-3.  **Set up a reverse proxy:**
-    Use a web server like Nginx to act as a reverse proxy and forward requests to the Node.js server.
-
-    Create a new Nginx configuration file:
+1.  **Create a new Nginx configuration file:**
     ```bash
     sudo nano /etc/nginx/sites-available/niyali-travel
     ```
 
-    Add the following configuration:
+2.  **Add the following configuration:**
     ```nginx
     server {
         listen 80;
@@ -86,8 +69,30 @@ This guide provides instructions for deploying the Niyali Travel Site to a Hosti
     }
     ```
 
-    Enable the new configuration:
+3.  **Enable the new configuration:**
     ```bash
     sudo ln -s /etc/nginx/sites-available/niyali-travel /etc/nginx/sites-enabled
     sudo nginx -t
     sudo systemctl restart nginx
+    ```
+
+## 4. Secure with SSL
+
+1.  **Install Certbot:**
+    ```bash
+    sudo apt update
+    sudo apt install certbot python3-certbot-nginx
+    ```
+
+2.  **Obtain an SSL certificate:**
+    ```bash
+    sudo certbot --nginx -d your-domain.com
+    ```
+
+## 5. Monitoring and Alerts
+
+It is recommended to set up monitoring and alerts to ensure the health of the application.
+
+*   **Uptime Monitoring:** Use a service like Uptime Robot to monitor the availability of the site.
+*   **Performance Monitoring:** Use a tool like PM2's monitoring features or a third-party service like Datadog or New Relic to monitor CPU usage, memory usage, and response times.
+*   **Error Tracking:** Use a service like Sentry or Bugsnag to track and receive alerts for any errors that occur in the application.

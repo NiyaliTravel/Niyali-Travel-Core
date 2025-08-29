@@ -34,8 +34,11 @@ Visit the live site: [https://niyalitravel.github.io/niyali-travel-site/](https:
 - **Styling**: Tailwind CSS + shadcn/ui
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
-- **Deployment**: GitHub Pages
-- **CI/CD**: GitHub Actions
+- **Hosting**: Hostinger VPS (Ubuntu)
+- **Web Server**: Nginx
+- **Containerization**: Docker
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
 
 ## 📦 Installation
 
@@ -85,33 +88,21 @@ Visit `http://localhost:5173`
 
 ## 🚀 Deployment
 
-### GitHub Pages Deployment (Automatic)
+This project is configured for deployment to a Hostinger VPS running Ubuntu, using Docker for containerization and Nginx as a reverse proxy.
 
-The site automatically deploys to GitHub Pages when you push to the `main` branch.
+### VPS Deployment Steps
 
-### Manual Deployment Setup
-
-1. **Enable GitHub Pages**
-   - Go to Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: gh-pages (will be created automatically)
-
-2. **Add GitHub Secrets**
-   - Go to Settings → Secrets and variables → Actions
-   - Add the following secrets:
-     - `VITE_SUPABASE_URL`: Your Supabase project URL
-     - `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
-
-3. **Push to main branch**
-   ```bash
-   git add .
-   git commit -m "Deploy website"
-   git push origin main
-   ```
-
-4. **Check deployment**
-   - Go to Actions tab to monitor build
-   - Once complete, visit your GitHub Pages URL
+1.  **Provision Hostinger VPS**: Set up a new VPS with Ubuntu 22.04 or later.
+2.  **Install Docker and Docker Compose**: Follow the official Docker documentation to install both on your VPS.
+3.  **Install Nginx**: `sudo apt update && sudo apt install nginx`
+4.  **Clone the Repository**: `git clone https://github.com/NiyaliTravel/niyali-travel-site.git`
+5.  **Configure Environment Variables**: Create `.env.production` files for both the `client` and `server` directories with your Supabase credentials and other necessary variables.
+6.  **Build and Run with Docker Compose**:
+    ```bash
+    docker-compose up --build -d
+    ```
+7.  **Configure Nginx**: Set up a reverse proxy to forward requests to the appropriate Docker containers. A sample `nginx.conf` is provided in the root directory.
+8.  **Secure with SSL**: Use Certbot to issue a free SSL certificate for your domain.
 
 ## 📁 Project Structure
 

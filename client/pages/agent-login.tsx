@@ -1,14 +1,19 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { supabase } from '@/Utills/supabase';
 
 export default function AgentLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) alert('Login failed');
-    else window.location.href = '/agent-dashboard';
+    if (error) {
+      alert('Login failed');
+    } else {
+      router.push('/agent-dashboard');
+    }
   };
 
   return (

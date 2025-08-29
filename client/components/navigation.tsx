@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import {
@@ -10,12 +11,11 @@ import {
 } from "../components/ui/dropdown-menu";
 import { Menu, X, ChevronDown } from "lucide-react";
 import SocialLinks from "./social-links";
-import NiyaliLogo from "../assets/Niyali Main Logo_1755576205013.jpg";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+  const router = useRouter();
 
   // Fetch guest houses for dropdown
   const { data: guestHouses = [] } = useQuery<any[]>({
@@ -37,16 +37,18 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3" data-testid="logo-link">
-            <img 
-              src={NiyaliLogo} 
-              alt="Niyali Logo" 
-              className="w-8 h-8 object-contain"
-            />
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-niyali-navy">NIYALI</span>
-              <span className="text-xs text-gray-600 -mt-1">Transcend the travel</span>
-            </div>
+          <Link href="/" passHref>
+            <a className="flex items-center space-x-3" data-testid="logo-link">
+              <img
+                src="/Niyali Main Logo_1755576205013.jpg"
+                alt="Niyali Logo"
+                className="w-8 h-8 object-contain"
+              />
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-niyali-navy">NIYALI</span>
+                <span className="text-xs text-gray-600 -mt-1">Transcend the travel</span>
+              </div>
+            </a>
           </Link>
           
           {/* Desktop Navigation */}
@@ -54,28 +56,32 @@ export default function Navigation() {
             {navItems.map((item) => (
               <Link
                 key={item.href}
-                to={item.href}
-                className={`text-gray-700 hover:text-niyali-navy transition-colors ${
-                  location.pathname === item.href ? 'text-niyali-navy font-medium' : ''
-                }`}
-                data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
+                href={item.href}
+                passHref
               >
-                {item.label}
+                <a className={`text-gray-700 hover:text-niyali-navy transition-colors ${
+                  router.pathname === item.href ? 'text-niyali-navy font-medium' : ''
+                }`}
+                data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}>
+                  {item.label}
+                </a>
               </Link>
             ))}
             <Link
-              to="/agent-login"
-              className="bg-niyali-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-              data-testid="nav-agent-portal"
+              href="/agent-login"
+              passHref
             >
-              Agent Portal
+              <a className="bg-niyali-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity" data-testid="nav-agent-portal">
+                Agent Portal
+              </a>
             </Link>
             <Link
-              to="/traveler-portal"
-              className="border-2 border-niyali-navy text-niyali-navy px-4 py-2 rounded-lg hover:bg-niyali-navy hover:text-white transition-all"
-              data-testid="nav-traveler-portal"
+              href="/traveler-portal"
+              passHref
             >
-              My Trips
+              <a className="border-2 border-niyali-navy text-niyali-navy px-4 py-2 rounded-lg hover:bg-niyali-navy hover:text-white transition-all" data-testid="nav-traveler-portal">
+                My Trips
+              </a>
             </Link>
           </div>
           
@@ -95,7 +101,7 @@ export default function Navigation() {
               <div className="flex flex-col space-y-6 mt-6">
                 <div className="flex items-center space-x-3">
                   <img 
-                    src={NiyaliLogo} 
+                    src="/Niyali Main Logo_1755576205013.jpg"
                     alt="Niyali Logo" 
                     className="w-8 h-8 object-contain"
                   />
@@ -109,34 +115,35 @@ export default function Navigation() {
                   {navItems.map((item) => (
                     <Link
                       key={item.href}
-                      to={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`text-lg text-gray-700 hover:text-niyali-navy transition-colors ${
-                        location.pathname === item.href ? 'text-niyali-navy font-medium' : ''
-                      }`}
-                      data-testid={`mobile-nav-${item.label.toLowerCase().replace(' ', '-')}`}
+                      href={item.href}
+                      passHref
                     >
-                      {item.label}
+                      <a onClick={() => setIsOpen(false)} className={`text-lg text-gray-700 hover:text-niyali-navy transition-colors ${
+                        router.pathname === item.href ? 'text-niyali-navy font-medium' : ''
+                      }`}
+                      data-testid={`mobile-nav-${item.label.toLowerCase().replace(' ', '-')}`}>
+                        {item.label}
+                      </a>
                     </Link>
                   ))}
                 </div>
                 
                 <div className="flex flex-col space-y-3 pt-6 border-t">
                   <Link
-                    to="/agent-login"
-                    onClick={() => setIsOpen(false)}
-                    className="bg-niyali-gradient text-white px-6 py-3 rounded-lg text-center hover:opacity-90 transition-opacity"
-                    data-testid="mobile-nav-agent-portal"
+                    href="/agent-login"
+                    passHref
                   >
-                    Agent Portal
+                    <a onClick={() => setIsOpen(false)} className="bg-niyali-gradient text-white px-6 py-3 rounded-lg text-center hover:opacity-90 transition-opacity" data-testid="mobile-nav-agent-portal">
+                      Agent Portal
+                    </a>
                   </Link>
                   <Link
-                    to="/traveler-portal"
-                    onClick={() => setIsOpen(false)}
-                    className="border-2 border-niyali-navy text-niyali-navy px-6 py-3 rounded-lg text-center hover:bg-niyali-navy hover:text-white transition-all"
-                    data-testid="mobile-nav-traveler-portal"
+                    href="/traveler-portal"
+                    passHref
                   >
-                    My Trips
+                    <a onClick={() => setIsOpen(false)} className="border-2 border-niyali-navy text-niyali-navy px-6 py-3 rounded-lg text-center hover:bg-niyali-navy hover:text-white transition-all" data-testid="mobile-nav-traveler-portal">
+                      My Trips
+                    </a>
                   </Link>
                 </div>
               </div>
