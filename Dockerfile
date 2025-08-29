@@ -2,7 +2,7 @@
 FROM node:20-alpine as builder
 WORKDIR /usr/src/app
 COPY client/package*.json ./
-COPY tsconfig.json ./
+COPY client/tsconfig.json ./
 COPY shared ./shared
 RUN npm install
 COPY client/ .
