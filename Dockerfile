@@ -1,25 +1,37 @@
-# Build stage
-FROM node:20-alpine as builder
-WORKDIR /usr/src/app
+# Multi-stage build for Node.js application
+FROM node:20-bullseye-slim AS base
 
-# Copy all package.json files
-COPY package.json ./
-COPY client/package.json ./client/
-COPY server/package.json ./server/
-COPY shared/package.json ./shared/
+# Set working directory
+WORKDIR /app
 
-# Install all dependencies
-RUN npm install
+# Copy package files
+COPY package*.json ./
+COPY client/package*.json ./client/
+COPY server/package*.json ./server/
 
-# Copy all source code
+# Install dependencies
+RUN npm ci --only=production
+
+# Development stage
+FROM base AS development
+RUN npm ci
 COPY . .
+EXPOSE 3000 5008
+CMD ["npm", "run", "dev"]
 
-# Build the client
-RUN npm run build --workspace=client
+# Build stage
+FROM base AS build
+COPY . .
+RUN npm ci
+RUN npm run build
 
 # Production stage
-FROM nginx:stable-alpine
-COPY --from=builder /usr/src/app/client/dist /usr/share/nginx/html
-COPY client/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM node:20-bullseye-slim AS production
+WORKDIR /app
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/client/dist ./client/dist
+COPY --from=build /app/server/dist ./server/dist
+COPY --from=build /app/server/package*.json ./server/
+RUN npm ci --only=production
+EXPOSE 3000 5008
+CMD ["npm", "start"]

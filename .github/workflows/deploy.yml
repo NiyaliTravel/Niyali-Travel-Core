@@ -2,90 +2,43 @@ name: Deploy to Hostinger VPS
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-    - name: Install Supabase CLI
-      run: |
-        curl -sL https://supabase.com/install.sh | sudo sh -s -- --with-cli
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install Supabase JS client
-      run: |
-        npm install @supabase/supabase-js
+      - name: Build client
+        run: npm run build --workspace=client
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ secrets.VPS_KEY }}
+      - name: Build server  
+        run: npm run build --workspace=server
 
-    - name: Add VPS to known hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
-        chmod 600 ~/.ssh/known_hosts
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_KEY }}
 
-    - name: Create Supabase migration log directory on VPS
-      run: |
-        ssh -i ~/.ssh/github_actions_vps_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "sudo mkdir -p /var/log/niyali-travel"
-
-    - name: Run Supabase migration via SSH with retry logic
-      run: |
-        LOG_FILE="/var/log/niyali-travel/supabase-migrate.log"
-        MAX_RETRIES=3
-        BACKOFF_SECONDS=(5 15 30)
-        
-        for (( i=0; i<MAX_RETRIES; i++ )); do
-          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          echo "${TIMESTAMP} - Attempt $((i+1)) of ${MAX_RETRIES}: Running Supabase migration..." | tee -a "${LOG_FILE}"
-          
-          ssh -i ~/.ssh/github_actions_vps_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd /var/www/niyali-travel-core/supabase && supabase db push" >> "${LOG_FILE}" 2>&1
-          
-          if [ $? -eq 0 ]; then
-            echo "${TIMESTAMP} - Supabase migration successful." | tee -a "${LOG_FILE}"
-            break
-          else
-            echo "${TIMESTAMP} - Supabase migration failed on attempt $((i+1))." | tee -a "${LOG_FILE}"
-            if [ $((i+1)) -lt ${MAX_RETRIES} ]; then
-              SLEEP_TIME=${BACKOFF_SECONDS[$i]}
-              echo "${TIMESTAMP} - Retrying in ${SLEEP_TIME} seconds..." | tee -a "${LOG_FILE}"
-              sleep ${SLEEP_TIME}
-            else
-              echo "${TIMESTAMP} - All Supabase migration retries failed." | tee -a "${LOG_FILE}"
-              # Optional: Add Slack webhook alert here
-              # curl -X POST -H 'Content-type: application/json' --data '{"text":"Supabase migration failed after multiple retries on ${{ github.repository }}."}' ${{ secrets.SLACK_WEBHOOK_URL }}
-              exit 1 # Fail the GitHub Action if all retries fail
-            fi
-          fi
-        done
-
-    - name: Create frontend deployment log directory on VPS
-      run: |
-        ssh -i ~/.ssh/github_actions_vps_key -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "sudo mkdir -p /var/log/niyali-travel"
-
-    - name: Rsync frontend to VPS
-      run: |
-        rsync -avz --delete -e "ssh -i ~/.ssh/github_actions_vps_key -o StrictHostKeyChecking=no" ./client/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/niyali-travel-core/frontend > /var/log/niyali-travel/frontend-deploy.log 2>&1
-
-    - name: Upload deployment logs to Supabase Storage
-      run: |
-        node .github/workflows/upload_logs.js
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-
-    - name: Log deployment status
-      run: |
-        echo "Deployment completed at $(date)"
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "
+            cd /var/www/niyali-travel-core &&
+            git pull origin main &&
+            npm ci &&
+            npm run build &&
+            pm2 restart niyali-travel-server &&
+            sudo systemctl reload nginx
+          "

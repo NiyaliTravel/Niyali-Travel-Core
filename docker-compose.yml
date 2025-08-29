@@ -4,23 +4,40 @@ services:
   client:
     build:
       context: .
-      dockerfile: Dockerfile
+      target: production
     ports:
-      - "5173:5173"
-    networks:
-      - niyali-network
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./client/dist:/app/client/dist
+    depends_on:
+      - server
 
   server:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      target: production
     ports:
       - "5008:5008"
-    env_file:
-      - ./server/.env.production
-    networks:
-      - niyali-network
+    environment:
+      - NODE_ENV=production
+      - PORT=5008
+    volumes:
+      - ./server/dist:/app/server/dist
 
-networks:
-  niyali-network:
-    driver: bridge
+  development:
+    build:
+      context: .
+      target: development
+    ports:
+      - "3000:3000"
+      - "5008:5008"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/client/node_modules
+      - /app/server/node_modules
+    command: npm run dev
