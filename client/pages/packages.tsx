@@ -227,9 +227,9 @@ export default function Packages() {
                     </div>
                     <div className="flex gap-2">
                       <Link to={`/packages/${pkg.id}`}>
-                        <a><Button size="sm" variant="outline" data-testid={`button-details-${pkg.id}`}>
+                        <Button size="sm" variant="outline" data-testid={`button-details-${pkg.id}`}>
                           Details
-                        </Button></a>
+                        </Button>
                       </Link>
                       <Button size="sm" className="niyali-gradient text-white" data-testid={`button-book-${pkg.id}`} onClick={() => navigate(`/booking?package=${pkg.id}`)}>
                         Book Now

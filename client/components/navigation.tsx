@@ -37,18 +37,16 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/">
-            <a className="flex items-center space-x-3" data-testid="logo-link">
-              <img
-                src="/Niyali Main Logo_1755576205013.jpg"
-                alt="Niyali Logo"
-                className="w-8 h-8 object-contain"
-              />
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-niyali-navy">NIYALI</span>
-                <span className="text-xs text-gray-600 -mt-1">Transcend the travel</span>
-              </div>
-            </a>
+          <Link to="/" className="flex items-center space-x-3" data-testid="logo-link">
+            <img
+              src="/Niyali Main Logo_1755576205013.jpg"
+              alt="Niyali Logo"
+              className="w-8 h-8 object-contain"
+            />
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-niyali-navy">NIYALI</span>
+              <span className="text-xs text-gray-600 -mt-1">Transcend the travel</span>
+            </div>
           </Link>
           
           {/* Desktop Navigation */}
@@ -56,32 +54,28 @@ export default function Navigation() {
             {navItems.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
-                passHref
-              >
-                <a className={`text-gray-700 hover:text-niyali-navy transition-colors ${
+                to={item.href}
+                className={`text-gray-700 hover:text-niyali-navy transition-colors ${
                   location.pathname === item.href ? 'text-niyali-navy font-medium' : ''
                 }`}
-                data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}>
-                  {item.label}
-                </a>
+                data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
+              >
+                {item.label}
               </Link>
             ))}
             <Link
-              href="/agent-login"
-              passHref
+              to="/agent-login"
+              className="bg-niyali-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+              data-testid="nav-agent-portal"
             >
-              <a className="bg-niyali-gradient text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity" data-testid="nav-agent-portal">
-                Agent Portal
-              </a>
+              Agent Portal
             </Link>
             <Link
-              href="/traveler-portal"
-              passHref
+              to="/traveler-portal"
+              className="border-2 border-niyali-navy text-niyali-navy px-4 py-2 rounded-lg hover:bg-niyali-navy hover:text-white transition-all"
+              data-testid="nav-traveler-portal"
             >
-              <a className="border-2 border-niyali-navy text-niyali-navy px-4 py-2 rounded-lg hover:bg-niyali-navy hover:text-white transition-all" data-testid="nav-traveler-portal">
-                My Trips
-              </a>
+              My Trips
             </Link>
           </div>
           
@@ -115,35 +109,34 @@ export default function Navigation() {
                   {navItems.map((item) => (
                     <Link
                       key={item.href}
-                      href={item.href}
-                      passHref
-                    >
-                      <a onClick={() => setIsOpen(false)} className={`text-lg text-gray-700 hover:text-niyali-navy transition-colors ${
+                      to={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`text-lg text-gray-700 hover:text-niyali-navy transition-colors ${
                         location.pathname === item.href ? 'text-niyali-navy font-medium' : ''
                       }`}
-                      data-testid={`mobile-nav-${item.label.toLowerCase().replace(' ', '-')}`}>
-                        {item.label}
-                      </a>
+                      data-testid={`mobile-nav-${item.label.toLowerCase().replace(' ', '-')}`}
+                    >
+                      {item.label}
                     </Link>
                   ))}
                 </div>
                 
                 <div className="flex flex-col space-y-3 pt-6 border-t">
                   <Link
-                    href="/agent-login"
-                    passHref
+                    to="/agent-login"
+                    onClick={() => setIsOpen(false)}
+                    className="bg-niyali-gradient text-white px-6 py-3 rounded-lg text-center hover:opacity-90 transition-opacity"
+                    data-testid="mobile-nav-agent-portal"
                   >
-                    <a onClick={() => setIsOpen(false)} className="bg-niyali-gradient text-white px-6 py-3 rounded-lg text-center hover:opacity-90 transition-opacity" data-testid="mobile-nav-agent-portal">
-                      Agent Portal
-                    </a>
+                    Agent Portal
                   </Link>
                   <Link
-                    href="/traveler-portal"
-                    passHref
+                    to="/traveler-portal"
+                    onClick={() => setIsOpen(false)}
+                    className="border-2 border-niyali-navy text-niyali-navy px-6 py-3 rounded-lg text-center hover:bg-niyali-navy hover:text-white transition-all"
+                    data-testid="mobile-nav-traveler-portal"
                   >
-                    <a onClick={() => setIsOpen(false)} className="border-2 border-niyali-navy text-niyali-navy px-6 py-3 rounded-lg text-center hover:bg-niyali-navy hover:text-white transition-all" data-testid="mobile-nav-traveler-portal">
-                      My Trips
-                    </a>
+                    My Trips
                   </Link>
                 </div>
               </div>

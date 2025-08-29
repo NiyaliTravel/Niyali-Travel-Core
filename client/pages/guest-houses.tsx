@@ -200,11 +200,11 @@ export default function GuestHouses() {
                     <span className="text-gray-500">/night</span>
                   </div>
                   <div className="flex gap-2">
-                    <Link href="/booking?guestHouse=niyama" passHref>
-                      <a><Button size="sm" variant="outline" data-testid="button-details-niyama">Details</Button></a>
+                    <Link to="/booking?guestHouse=niyama">
+                      <Button size="sm" variant="outline" data-testid="button-details-niyama">Details</Button>
                     </Link>
-                    <Link href="/booking?guestHouse=niyama" passHref>
-                      <a><Button size="sm" className="niyali-gradient text-white" data-testid="button-book-niyama">Book Now</Button></a>
+                    <Link to="/booking?guestHouse=niyama">
+                      <Button size="sm" className="niyali-gradient text-white" data-testid="button-book-niyama">Book Now</Button>
                     </Link>
                   </div>
                 </div>
@@ -257,11 +257,11 @@ export default function GuestHouses() {
                     <span className="text-gray-500">/night</span>
                   </div>
                   <div className="flex gap-2">
-                    <Link href="/booking?guestHouse=coral" passHref>
-                      <a><Button size="sm" variant="outline" data-testid="button-details-coral">Details</Button></a>
+                    <Link to="/booking?guestHouse=coral">
+                      <Button size="sm" variant="outline" data-testid="button-details-coral">Details</Button>
                     </Link>
-                    <Link href="/booking?guestHouse=coral" passHref>
-                      <a><Button size="sm" className="niyali-gradient text-white" data-testid="button-book-coral">Book Now</Button></a>
+                    <Link to="/booking?guestHouse=coral">
+                      <Button size="sm" className="niyali-gradient text-white" data-testid="button-book-coral">Book Now</Button>
                     </Link>
                   </div>
                 </div>
@@ -319,11 +319,11 @@ export default function GuestHouses() {
                     <span className="text-gray-500">/night</span>
                   </div>
                   <div className="flex gap-2">
-                    <Link href="/booking?guestHouse=azure" passHref>
-                      <a><Button size="sm" variant="outline" data-testid="button-details-azure">Details</Button></a>
+                    <Link to="/booking?guestHouse=azure">
+                      <Button size="sm" variant="outline" data-testid="button-details-azure">Details</Button>
                     </Link>
-                    <Link href="/booking?guestHouse=azure" passHref>
-                      <a><Button size="sm" className="niyali-gradient text-white" data-testid="button-book-azure">Book Now</Button></a>
+                    <Link to="/booking?guestHouse=azure">
+                      <Button size="sm" className="niyali-gradient text-white" data-testid="button-book-azure">Book Now</Button>
                     </Link>
                   </div>
                 </div>

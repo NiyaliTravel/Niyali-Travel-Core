@@ -230,16 +230,16 @@ export default function Islands() {
                   )}
 
                   <div className="flex gap-2 pt-4 border-t">
-                    <Link href="/island-explorer" passHref>
-                      <a className="flex-1"><Button variant="outline" className="w-full" data-testid={`button-view-map-${island.id}`}>
+                    <Link to="/island-explorer" className="flex-1">
+                      <Button variant="outline" className="w-full" data-testid={`button-view-map-${island.id}`}>
                         View on Map
-                      </Button></a>
+                      </Button>
                     </Link>
                     {island.has_guest_houses && (
-                      <Link to={`/guest-houses?island=${island.name}`}>
-                        <a className="flex-1"><Button className="w-full bg-niyali-gradient text-white" data-testid={`button-view-guesthouses-${island.id}`}>
+                      <Link to={`/guest-houses?island=${island.name}`} className="flex-1">
+                        <Button className="w-full bg-niyali-gradient text-white" data-testid={`button-view-guesthouses-${island.id}`}>
                           Guest Houses
-                        </Button></a>
+                        </Button>
                       </Link>
                     )}
                   </div>
