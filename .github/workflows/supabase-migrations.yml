@@ -16,9 +16,6 @@ jobs:
         with:
           node-version: '20' # Use your project's Node.js version
 
-      - name: Install Supabase CLI
-        run: |
-          npm install supabase --save-dev
         
       - name: Deploy Supabase Migrations
         run: supabase migrations deploy
