@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    networks:
+      - niyali-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5008:5008"
+    env_file:
+      - ./server/.env.production
+    networks:
+      - niyali-network
+
+networks:
+  niyali-network:
+    driver: bridge
