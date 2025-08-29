@@ -55,11 +55,11 @@ export default function Footer() {
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    to={link.href}
+                    className="hover:text-white transition-colors"
+                    data-testid={`footer-link-${link.label.toLowerCase().replace(' ', '-')}`}
                   >
-                    <a className="hover:text-white transition-colors" data-testid={`footer-link-${link.label.toLowerCase().replace(' ', '-')}`}>
-                      {link.label}
-                    </a>
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -73,11 +73,11 @@ export default function Footer() {
               {supportLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    to={link.href}
+                    className="hover:text-white transition-colors"
+                    data-testid={`footer-support-${link.label.toLowerCase().replace(' ', '-')}`}
                   >
-                    <a className="hover:text-white transition-colors" data-testid={`footer-support-${link.label.toLowerCase().replace(' ', '-')}`}>
-                      {link.label}
-                    </a>
+                    {link.label}
                   </Link>
                 </li>
               ))}

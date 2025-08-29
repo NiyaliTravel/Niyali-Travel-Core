@@ -236,7 +236,7 @@ export default function Islands() {
                       </Button></a>
                     </Link>
                     {island.has_guest_houses && (
-                      <Link href={`/guest-houses?island=${island.name}`} passHref>
+                      <Link to={`/guest-houses?island=${island.name}`}>
                         <a className="flex-1"><Button className="w-full bg-niyali-gradient text-white" data-testid={`button-view-guesthouses-${island.id}`}>
                           Guest Houses
                         </Button></a>

@@ -11,13 +11,13 @@ export default function Admin() {
   useEffect(() => {
     const token = localStorage.getItem("admin-token");
     if (!token) {
-      router.push("/admin-login");
+      navigate("/admin-login");
     }
-  }, [router]);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("admin-token");
-    router.push("/admin-login");
+    navigate("/admin-login");
   };
 
   return (
@@ -29,17 +29,13 @@ export default function Admin() {
           <Button onClick={handleLogout} variant="outline">Logout</Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link href="/admin/content" passHref>
-            <a className="block p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <h2 className="text-xl font-bold text-niyali-navy mb-2">Manage Content</h2>
-              <p className="text-gray-600">Update website content, including images and text.</p>
-            </a>
+          <Link to="/admin/content" className="block p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <h2 className="text-xl font-bold text-niyali-navy mb-2">Manage Content</h2>
+            <p className="text-gray-600">Update website content, including images and text.</p>
           </Link>
-          <Link href="/admin/availability" passHref>
-            <a className="block p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-              <h2 className="text-xl font-bold text-niyali-navy mb-2">Manage Availability</h2>
-              <p className="text-gray-600">Update room and package availability.</p>
-            </a>
+          <Link to="/admin/availability" className="block p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <h2 className="text-xl font-bold text-niyali-navy mb-2">Manage Availability</h2>
+            <p className="text-gray-600">Update room and package availability.</p>
           </Link>
         </div>
       </div>

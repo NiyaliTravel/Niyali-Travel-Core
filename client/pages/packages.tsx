@@ -226,7 +226,7 @@ export default function Packages() {
                       <span className="text-gray-500 text-sm">/package</span>
                     </div>
                     <div className="flex gap-2">
-                      <Link href={`/packages/${pkg.id}`} passHref>
+                      <Link to={`/packages/${pkg.id}`}>
                         <a><Button size="sm" variant="outline" data-testid={`button-details-${pkg.id}`}>
                           Details
                         </Button></a>

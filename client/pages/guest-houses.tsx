@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, MapPin, Users, Wifi, Car, Utensils, Camera } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 export default function GuestHouses() {
   const [searchQuery, setSearchQuery] = useState("");

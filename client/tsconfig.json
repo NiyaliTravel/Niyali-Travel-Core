@@ -15,7 +15,7 @@
     },
     "outDir": "../dist/client",
     "jsx": "react-jsx",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "target": "ESNext",
     "module": "ESNext",
     "allowJs": true,
@@ -23,7 +23,7 @@
     "isolatedModules": true
   },
   "include": [
-    "**/*"
+    "src"
   ],
   "exclude": [
     "node_modules",

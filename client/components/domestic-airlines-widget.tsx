@@ -207,11 +207,9 @@ export default function DomesticAirlinesWidget() {
             className="bg-niyali-gradient hover:opacity-90 transition-opacity"
             data-testid="button-view-all-flights"
           >
-            <Link href="/domestic-airlines" passHref>
-              <a className="inline-flex items-center">
-                View All Domestic Flights
-                <Plane className="w-4 h-4 ml-2" />
-              </a>
+            <Link to="/domestic-airlines" className="inline-flex items-center">
+              View All Domestic Flights
+              <Plane className="w-4 h-4 ml-2" />
             </Link>
           </Button>
         </div>

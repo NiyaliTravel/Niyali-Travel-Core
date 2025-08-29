@@ -37,7 +37,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" passHref>
+          <Link to="/">
             <a className="flex items-center space-x-3" data-testid="logo-link">
               <img
                 src="/Niyali Main Logo_1755576205013.jpg"
